@@ -1,0 +1,380 @@
+Mplus VERSION 8.7 (Mac)
+MUTHEN & MUTHEN
+10/29/2024   2:41 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  Perf.-Circ.;
+  DATA:
+  FILE = "MPlus_Files/perfect_circumplex.dat";
+
+  VARIABLE:
+  NAMES = msd mst mhe mac mpo mse mtr mco mbe mun;
+   MISSING=.;
+
+  MODEL:
+  lmsd by msd*0.8;
+   lmst by mst*0.8;
+   lmhe by mhe*0.8;
+   lmac by mac*0.8;
+   lmpo by mpo*0.8;
+   lmse by mse*0.8;
+   lmtr by mtr*0.8;
+   lmco by mco*0.8;
+   lmbe by mbe*0.8;
+   lmun by mun*0.8;
+   msd-mun*0.5;
+   lmsd-lmun@0;
+
+   gen by lmsd-lmun@1;
+
+   cos1 by lmsd@1.0;
+   cos1 by lmst* 0.99 (c1_02);
+   cos1 by lmhe* 0.97 (c1_03);
+   cos1 by lmac* 0.58 (c1_04);
+   cos1 by lmpo* 0.44 (c1_05);
+   cos1 by lmse*-0.17 (c1_06);
+   cos1 by lmtr*-0.32 (c1_07);
+   cos1 by lmco*-0.28 (c1_08);
+   cos1 by lmbe* 0.29 (c1_09);
+   cos1 by lmun* 0.91 (c1_10);
+
+   sin1 by lmsd@0.0;
+   sin1 by lmst*-0.13 (s1_02);
+   sin1 by lmhe* 0.26 (s1_03);
+   sin1 by lmac* 0.82 (s1_04);
+   sin1 by lmpo* 0.90 (s1_05);
+   sin1 by lmse* 0.99 (s1_06);
+   sin1 by lmtr* 0.95 (s1_07);
+   sin1 by lmco* 0.96 (s1_08);
+   sin1 by lmbe* 0.96 (s1_09);
+   sin1 by lmun*-0.42 (s1_10);
+
+   gen*0.1 (b0);
+   cos1*0.5 (b1);
+   sin1*0.5 (b1);
+
+   gen-sin1 with gen-sin1@0;
+  MODEL CONSTRAINT:
+  b0 > 0;
+   b1 > 0;
+
+   b0 = 1 - b1;
+
+   c1_02 = cos(0.6283185);  s1_02 = sin(0.6283185);
+   c1_03 = cos(1.2566371);  s1_03 = sin(1.2566371);
+   c1_04 = cos(1.8849556);  s1_04 = sin(1.8849556);
+   c1_05 = cos(2.5132741);  s1_05 = sin(2.5132741);
+   c1_06 = cos(3.1415927);  s1_06 = sin(3.1415927);
+   c1_07 = cos(3.7699112);  s1_07 = sin(3.7699112);
+   c1_08 = cos(4.3982297);  s1_08 = sin(4.3982297);
+   c1_09 = cos(5.0265482);  s1_09 = sin(5.0265482);
+   c1_10 = cos(5.6548668);  s1_10 = sin(5.6548668);
+
+
+
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  5
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Perf.-Circ.;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1180
+
+Number of dependent variables                                   10
+Number of independent variables                                  0
+Number of continuous latent variables                           13
+
+Observed dependent variables
+
+  Continuous
+   MSD         MST         MHE         MAC         MPO         MSE
+   MTR         MCO         MBE         MUN
+
+Continuous latent variables
+   LMSD        LMST        LMHE        LMAC        LMPO        LMSE
+   LMTR        LMCO        LMBE        LMUN        GEN         COS1
+   SIN1
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  MPlus_Files/perfect_circumplex.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             6
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.999
+ MST            0.999         0.999
+ MHE            0.998         0.998         0.998
+ MAC            0.998         0.998         0.997         0.998
+ MPO            0.998         0.998         0.998         0.997         0.998
+ MSE            0.997         0.997         0.997         0.997         0.997
+ MTR            0.999         0.999         0.998         0.998         0.998
+ MCO            0.997         0.997         0.997         0.997         0.997
+ MBE            0.999         0.999         0.998         0.998         0.998
+ MUN            0.999         0.999         0.998         0.998         0.998
+
+
+           Covariance Coverage
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            0.997
+ MTR            0.997         0.999
+ MCO            0.997         0.997         0.997
+ MBE            0.997         0.999         0.997         1.000
+ MUN            0.997         0.999         0.997         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     MSD                   4.771      -0.601       1.000    0.08%       4.000      4.500      5.000
+            1179.000       0.679       0.201       6.000   10.60%       5.000      5.500
+     MST                   3.200       0.080       1.000    2.88%       2.000      3.000      3.000
+            1179.000       1.148      -0.506       6.000    0.51%       3.500      4.000
+     MHE                   3.626      -0.045       1.000    1.02%       2.500      3.500      3.500
+            1178.000       1.109      -0.395       6.000    2.21%       4.000      4.500
+     MAC                   3.660      -0.174       1.000    1.44%       3.000      3.500      3.500
+            1178.000       1.086      -0.327       6.000    1.78%       4.000      4.500
+     MPO                   3.237       0.110       1.000    1.27%       2.500      3.000      3.000
+            1178.000       0.779      -0.004       6.000    0.25%       3.500      4.000
+     MSE                   4.033      -0.315       1.000    0.51%       3.000      4.000      4.000
+            1177.000       1.204      -0.520       6.000    4.16%       4.500      5.000
+     MTR                   3.780      -0.196       1.000    0.59%       3.000      3.500      4.000
+            1179.000       0.998      -0.312       6.000    1.27%       4.000      4.500
+     MCO                   3.897      -0.405       1.000    1.70%       3.000      3.500      4.000
+            1177.000       1.297      -0.359       6.000    3.31%       4.500      5.000
+     MBE                   5.226      -0.809       1.500    0.08%       5.000      5.000      5.500
+            1180.000       0.389       1.166       6.000   22.80%       5.500      6.000
+     MUN                   5.142      -0.940       2.000    0.17%       4.667      5.000      5.333
+            1180.000       0.382       1.590       6.000   11.61%       5.333      5.667
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       31
+
+Loglikelihood
+
+          H0 Value                      -14825.389
+          H1 Value                      -14488.253
+
+Information Criteria
+
+          Akaike (AIC)                   29712.779
+          Bayesian (BIC)                 29870.050
+          Sample-Size Adjusted BIC       29771.583
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                            674.272
+          Degrees of Freedom                    34
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.126
+          90 Percent C.I.                    0.118  0.135
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.725
+          TLI                                0.636
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           2373.087
+          Degrees of Freedom                    45
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.102
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ LMSD     BY
+    MSD                0.491      0.029     16.667      0.000
+
+ LMST     BY
+    MST                0.728      0.036     20.198      0.000
+
+ LMHE     BY
+    MHE                0.636      0.036     17.822      0.000
+
+ LMAC     BY
+    MAC                0.573      0.037     15.612      0.000
+
+ LMPO     BY
+    MPO                0.612      0.031     19.698      0.000
+
+ LMSE     BY
+    MSE                0.747      0.035     21.380      0.000
+
+ LMTR     BY
+    MTR                0.545      0.031     17.819      0.000
+
+ LMCO     BY
+    MCO                0.599      0.040     14.900      0.000
+
+ LMBE     BY
+    MBE                0.411      0.027     15.428      0.000
+
+ LMUN     BY
+    MUN                0.346      0.025     13.789      0.000
+
+ GEN      BY
+    LMSD               1.000      0.000    999.000    999.000
+    LMST               1.000      0.000    999.000    999.000
+    LMHE               1.000      0.000    999.000    999.000
+    LMAC               1.000      0.000    999.000    999.000
+    LMPO               1.000      0.000    999.000    999.000
+    LMSE               1.000      0.000    999.000    999.000
+    LMTR               1.000      0.000    999.000    999.000
+    LMCO               1.000      0.000    999.000    999.000
+    LMBE               1.000      0.000    999.000    999.000
+    LMUN               1.000      0.000    999.000    999.000
+
+ COS1     BY
+    LMSD               1.000      0.000    999.000    999.000
+    LMST               0.809      0.000    999.000    999.000
+    LMHE               0.309      0.000    999.000    999.000
+    LMAC              -0.309      0.000    999.000    999.000
+    LMPO              -0.809      0.000    999.000    999.000
+    LMSE              -1.000      0.000    999.000    999.000
+    LMTR              -0.809      0.000    999.000    999.000
+    LMCO              -0.309      0.000    999.000    999.000
+    LMBE               0.309      0.000    999.000    999.000
+    LMUN               0.809      0.000    999.000    999.000
+
+ SIN1     BY
+    LMSD               0.000      0.000    999.000    999.000
+    LMST               0.588      0.000    999.000    999.000
+    LMHE               0.951      0.000    999.000    999.000
+    LMAC               0.951      0.000    999.000    999.000
+    LMPO               0.588      0.000    999.000    999.000
+    LMSE               0.000      0.000    999.000    999.000
+    LMTR              -0.588      0.000    999.000    999.000
+    LMCO              -0.951      0.000    999.000    999.000
+    LMBE              -0.951      0.000    999.000    999.000
+    LMUN              -0.588      0.000    999.000    999.000
+
+ GEN      WITH
+    COS1               0.000      0.000    999.000    999.000
+    SIN1               0.000      0.000    999.000    999.000
+
+ COS1     WITH
+    SIN1               0.000      0.000    999.000    999.000
+
+ Intercepts
+    MSD                4.771      0.024    197.419      0.000
+    MST                3.200      0.031    103.456      0.000
+    MHE                3.626      0.031    118.623      0.000
+    MAC                3.659      0.030    120.074      0.000
+    MPO                3.237      0.026    126.026      0.000
+    MSE                4.032      0.031    128.963      0.000
+    MTR                3.780      0.029    132.333      0.000
+    MCO                3.897      0.033    117.759      0.000
+    MBE                5.226      0.019    281.194      0.000
+    MUN                5.142      0.018    280.149      0.000
+
+ Variances
+    GEN                0.415      0.018     22.826      0.000
+    COS1               0.585      0.018     32.168      0.000
+    SIN1               0.585      0.018     32.168      0.000
+
+ Residual Variances
+    MSD                0.448      0.026     17.362      0.000
+    MST                0.599      0.043     13.824      0.000
+    MHE                0.697      0.041     17.010      0.000
+    MAC                0.766      0.041     18.614      0.000
+    MPO                0.403      0.031     12.836      0.000
+    MSE                0.592      0.045     13.028      0.000
+    MTR                0.665      0.035     19.106      0.000
+    MCO                0.931      0.050     18.559      0.000
+    MBE                0.239      0.018     13.513      0.000
+    MUN                0.278      0.015     18.004      0.000
+    LMSD               0.000      0.000    999.000    999.000
+    LMST               0.000      0.000    999.000    999.000
+    LMHE               0.000      0.000    999.000    999.000
+    LMAC               0.000      0.000    999.000    999.000
+    LMPO               0.000      0.000    999.000    999.000
+    LMSE               0.000      0.000    999.000    999.000
+    LMTR               0.000      0.000    999.000    999.000
+    LMCO               0.000      0.000    999.000    999.000
+    LMBE               0.000      0.000    999.000    999.000
+    LMUN               0.000      0.000    999.000    999.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.333E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+     Beginning Time:  14:41:54
+        Ending Time:  14:41:54
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen

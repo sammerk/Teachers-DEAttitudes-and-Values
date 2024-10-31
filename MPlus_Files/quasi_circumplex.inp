@@ -1,0 +1,79 @@
+TITLE:
+Quasi-Circ.
+DATA:
+FILE = "MPlus_Files/quasi_circumplex.dat";
+ 
+VARIABLE:
+NAMES = msd mst mhe mac mpo mse mtr mco mbe mun; 
+ MISSING=.;
+ 
+MODEL:
+lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+ msd-mun*0.5;
+ lmsd-lmun@0;
+ 
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+
+ gen-sin1 with gen-sin1@0;
+MODEL CONSTRAINT:
+b0 > 0;
+ b1 > 0;
+ 
+ b0 = 1 - b1;
+
+ new(tst*0.58);
+ new(the*0.42);
+ new(tac*1.61);
+ new(tpo*1.89);
+ new(tse*3.66);
+ new(ttr*3.97);
+ new(tco*3.46);
+ new(tbe*5.08);
+ new(tun*5.04);
+ 
+ c1_02 = cos(tst);  s1_02 = sin(tst);
+ c1_03 = cos(the);  s1_03 = sin(the);
+ c1_04 = cos(tac);  s1_04 = sin(tac);
+ c1_05 = cos(tpo);  s1_05 = sin(tpo);
+ c1_06 = cos(tse);  s1_06 = sin(tse);
+ c1_07 = cos(ttr);  s1_07 = sin(ttr);
+ c1_08 = cos(tco);  s1_08 = sin(tco);
+ c1_09 = cos(tbe);  s1_09 = sin(tbe);
+ c1_10 = cos(tun);  s1_10 = sin(tun);
+OUTPUT:
+samp tech1 sval;

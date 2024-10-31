@@ -1,0 +1,1125 @@
+Mplus VERSION 8.7 (Mac)
+MUTHEN & MUTHEN
+10/29/2024   2:41 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  Quasi-Circ. 2F
+  DATA:
+  FILE = "MPlus_Files/quasi_circumplex2F.dat";
+
+  VARIABLE:
+  NAMES = msd mst mhe mac mpo mse mtr mco mbe mun;
+   MISSING=.;
+
+  MODEL:
+  lmsd by msd*0.8;
+   lmst by mst*0.8;
+   lmhe by mhe*0.8;
+   lmac by mac*0.8;
+   lmpo by mpo*0.8;
+   lmse by mse*0.8;
+   lmtr by mtr*0.8;
+   lmco by mco*0.8;
+   lmbe by mbe*0.8;
+   lmun by mun*0.8;
+
+   msd-mun*0.5;
+
+   lmsd-lmun@0 ;
+
+   gen by lmsd-lmun@1;
+
+   cos1 by lmsd@1.0;
+   cos1 by lmst* 0.99 (c1_02);
+   cos1 by lmhe* 0.97 (c1_03);
+   cos1 by lmac* 0.58 (c1_04);
+   cos1 by lmpo* 0.44 (c1_05);
+   cos1 by lmse*-0.17 (c1_06);
+   cos1 by lmtr*-0.32 (c1_07);
+   cos1 by lmco*-0.28 (c1_08);
+   cos1 by lmbe* 0.29 (c1_09);
+   cos1 by lmun* 0.91 (c1_10);
+
+   sin1 by lmsd@0.0;
+   sin1 by lmst*-0.13 (s1_02);
+   sin1 by lmhe* 0.26 (s1_03);
+   sin1 by lmac* 0.82 (s1_04);
+   sin1 by lmpo* 0.90 (s1_05);
+   sin1 by lmse* 0.99 (s1_06);
+   sin1 by lmtr* 0.95 (s1_07);
+   sin1 by lmco* 0.96 (s1_08);
+   sin1 by lmbe* 0.96 (s1_09);
+   sin1 by lmun*-0.42 (s1_10);
+
+   cos2 by lmsd@1.0;
+   cos2 by lmst* 0.97 (c2_02);
+   cos2 by lmhe* 0.87 (c2_03);
+   cos2 by lmac*-0.34 (c2_04);
+   cos2 by lmpo*-0.61 (c2_05);
+   cos2 by lmse*-0.95 (c2_06);
+   cos2 by lmtr*-0.80 (c2_07);
+   cos2 by lmco*-0.84 (c2_08);
+   cos2 by lmbe*-0.84 (c2_09);
+   cos2 by lmun* 0.65 (c2_10);
+
+   sin2 by lmsd@0.0;
+   sin2 by lmst*-0.25 (s2_02);
+   sin2 by lmhe* 0.50 (s2_03);
+   sin2 by lmac* 0.94 (s2_04);
+   sin2 by lmpo* 0.79 (s2_05);
+   sin2 by lmse*-0.33 (s2_06);
+   sin2 by lmtr*-0.60 (s2_07);
+   sin2 by lmco*-0.54 (s2_08);
+   sin2 by lmbe* 0.55 (s2_09);
+   sin2 by lmun*-0.76 (s2_10);
+
+
+
+   gen*0.1 (b0);
+   cos1*0.5 (b1);
+   sin1*0.5 (b1);
+   cos2*0.1 (b2);
+   sin2*0.1 (b2);
+
+   gen-sin2 with gen-sin2@0;
+  MODEL CONSTRAINT:
+  b0 > 0;
+  b1 > 0;
+  b2 > 0;
+
+  b0 = 1 - (b1 + b2);
+
+  new(t_02*6.88779);
+  new(t_03*0.95236);
+  new(t_04*2.07423);
+  new(t_05*2.14695);
+  new(t_06*3.30459);
+  new(t_07*3.62782);
+  new(t_08*3.23085);
+  new(t_09*4.77318);
+  new(t_10*5.37742);
+
+  c1_02 = cos(t_02);  s1_02 = sin(t_02);
+  c1_03 = cos(t_03);  s1_03 = sin(t_03);
+  c1_04 = cos(t_04);  s1_04 = sin(t_04);
+  c1_05 = cos(t_05);  s1_05 = sin(t_05);
+  c1_06 = cos(t_06);  s1_06 = sin(t_06);
+  c1_07 = cos(t_07);  s1_07 = sin(t_07);
+  c1_08 = cos(t_08);  s1_08 = sin(t_08);
+  c1_09 = cos(t_09);  s1_09 = sin(t_09);
+  c1_10 = cos(t_10);  s1_10 = sin(t_10);
+
+
+  c2_02 = cos(2*t_02);  s2_02 = sin(2*t_02);
+  c2_03 = cos(2*t_03);  s2_03 = sin(2*t_03);
+  c2_04 = cos(2*t_04);  s2_04 = sin(2*t_04);
+  c2_05 = cos(2*t_05);  s2_05 = sin(2*t_05);
+  c2_06 = cos(2*t_06);  s2_06 = sin(2*t_06);
+  c2_07 = cos(2*t_07);  s2_07 = sin(2*t_07);
+  c2_08 = cos(2*t_08);  s2_08 = sin(2*t_08);
+  c2_09 = cos(2*t_09);  s2_09 = sin(2*t_09);
+  c2_10 = cos(2*t_10);  s2_10 = sin(2*t_10);
+  OUTPUT:
+  samp tech1 sval;
+
+
+
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  5
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Quasi-Circ. 2F
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1180
+
+Number of dependent variables                                   10
+Number of independent variables                                  0
+Number of continuous latent variables                           15
+
+Observed dependent variables
+
+  Continuous
+   MSD         MST         MHE         MAC         MPO         MSE
+   MTR         MCO         MBE         MUN
+
+Continuous latent variables
+   LMSD        LMST        LMHE        LMAC        LMPO        LMSE
+   LMTR        LMCO        LMBE        LMUN        GEN         COS1
+   SIN1        COS2        SIN2
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  MPlus_Files/quasi_circumplex2F.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             6
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.999
+ MST            0.999         0.999
+ MHE            0.998         0.998         0.998
+ MAC            0.998         0.998         0.997         0.998
+ MPO            0.998         0.998         0.998         0.997         0.998
+ MSE            0.997         0.997         0.997         0.997         0.997
+ MTR            0.999         0.999         0.998         0.998         0.998
+ MCO            0.997         0.997         0.997         0.997         0.997
+ MBE            0.999         0.999         0.998         0.998         0.998
+ MUN            0.999         0.999         0.998         0.998         0.998
+
+
+           Covariance Coverage
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            0.997
+ MTR            0.997         0.999
+ MCO            0.997         0.997         0.997
+ MBE            0.997         0.999         0.997         1.000
+ MUN            0.997         0.999         0.997         1.000         1.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                4.771         3.200         3.625         3.659         3.236
+
+
+           Means
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                4.032         3.780         3.897         5.226         5.142
+
+
+           Covariances
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.679
+ MST            0.344         1.148
+ MHE            0.214         0.518         1.109
+ MAC            0.161         0.156         0.205         1.086
+ MPO            0.046         0.118         0.250         0.456         0.779
+ MSE           -0.028        -0.196         0.081         0.274         0.322
+ MTR           -0.056        -0.127        -0.008         0.031         0.131
+ MCO           -0.138        -0.226        -0.029         0.281         0.337
+ MBE            0.083         0.020         0.045         0.049        -0.010
+ MUN            0.138         0.052         0.044        -0.027        -0.064
+
+
+           Covariances
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            1.204
+ MTR            0.472         0.998
+ MCO            0.623         0.467         1.297
+ MBE            0.146         0.133         0.107         0.389
+ MUN           -0.040        -0.005        -0.044         0.142         0.382
+
+
+           Correlations
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            1.000
+ MST            0.390         1.000
+ MHE            0.246         0.459         1.000
+ MAC            0.187         0.139         0.187         1.000
+ MPO            0.064         0.125         0.269         0.496         1.000
+ MSE           -0.031        -0.167         0.070         0.240         0.332
+ MTR           -0.067        -0.118        -0.007         0.030         0.148
+ MCO           -0.147        -0.185        -0.024         0.237         0.336
+ MBE            0.161         0.031         0.069         0.076        -0.018
+ MUN            0.271         0.078         0.067        -0.042        -0.118
+
+
+           Correlations
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            1.000
+ MTR            0.431         1.000
+ MCO            0.499         0.410         1.000
+ MBE            0.213         0.213         0.150         1.000
+ MUN           -0.060        -0.008        -0.062         0.367         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -14488.253
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     MSD                   4.771      -0.601       1.000    0.08%       4.000      4.500      5.000
+            1179.000       0.679       0.201       6.000   10.60%       5.000      5.500
+     MST                   3.200       0.080       1.000    2.88%       2.000      3.000      3.000
+            1179.000       1.148      -0.506       6.000    0.51%       3.500      4.000
+     MHE                   3.626      -0.045       1.000    1.02%       2.500      3.500      3.500
+            1178.000       1.109      -0.395       6.000    2.21%       4.000      4.500
+     MAC                   3.660      -0.174       1.000    1.44%       3.000      3.500      3.500
+            1178.000       1.086      -0.327       6.000    1.78%       4.000      4.500
+     MPO                   3.237       0.110       1.000    1.27%       2.500      3.000      3.000
+            1178.000       0.779      -0.004       6.000    0.25%       3.500      4.000
+     MSE                   4.033      -0.315       1.000    0.51%       3.000      4.000      4.000
+            1177.000       1.204      -0.520       6.000    4.16%       4.500      5.000
+     MTR                   3.780      -0.196       1.000    0.59%       3.000      3.500      4.000
+            1179.000       0.998      -0.312       6.000    1.27%       4.000      4.500
+     MCO                   3.897      -0.405       1.000    1.70%       3.000      3.500      4.000
+            1177.000       1.297      -0.359       6.000    3.31%       4.500      5.000
+     MBE                   5.226      -0.809       1.500    0.08%       5.000      5.000      5.500
+            1180.000       0.389       1.166       6.000   22.80%       5.500      6.000
+     MUN                   5.142      -0.940       2.000    0.17%       4.667      5.000      5.333
+            1180.000       0.382       1.590       6.000   11.61%       5.333      5.667
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       41
+
+Loglikelihood
+
+          H0 Value                      -14589.456
+          H1 Value                      -14488.253
+
+Information Criteria
+
+          Akaike (AIC)                   29260.912
+          Bayesian (BIC)                 29468.916
+          Sample-Size Adjusted BIC       29338.686
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                            202.405
+          Degrees of Freedom                    24
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.079
+          90 Percent C.I.                    0.069  0.090
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.923
+          TLI                                0.856
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           2373.087
+          Degrees of Freedom                    45
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.049
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ LMSD     BY
+    MSD                0.493      0.030     16.410      0.000
+
+ LMST     BY
+    MST                0.809      0.039     20.572      0.000
+
+ LMHE     BY
+    MHE                0.639      0.034     18.718      0.000
+
+ LMAC     BY
+    MAC                0.611      0.035     17.261      0.000
+
+ LMPO     BY
+    MPO                0.759      0.033     23.121      0.000
+
+ LMSE     BY
+    MSE                0.795      0.033     23.788      0.000
+
+ LMTR     BY
+    MTR                0.601      0.032     18.749      0.000
+
+ LMCO     BY
+    MCO                0.801      0.034     23.439      0.000
+
+ LMBE     BY
+    MBE                0.462      0.034     13.745      0.000
+
+ LMUN     BY
+    MUN                0.372      0.028     13.088      0.000
+
+ GEN      BY
+    LMSD               1.000      0.000    999.000    999.000
+    LMST               1.000      0.000    999.000    999.000
+    LMHE               1.000      0.000    999.000    999.000
+    LMAC               1.000      0.000    999.000    999.000
+    LMPO               1.000      0.000    999.000    999.000
+    LMSE               1.000      0.000    999.000    999.000
+    LMTR               1.000      0.000    999.000    999.000
+    LMCO               1.000      0.000    999.000    999.000
+    LMBE               1.000      0.000    999.000    999.000
+    LMUN               1.000      0.000    999.000    999.000
+
+ COS1     BY
+    LMSD               1.000      0.000    999.000    999.000
+    LMST               0.824      0.052     15.898      0.000
+    LMHE               0.588      0.090      6.505      0.000
+    LMAC              -0.477      0.111     -4.307      0.000
+    LMPO              -0.540      0.087     -6.184      0.000
+    LMSE              -0.987      0.017    -56.545      0.000
+    LMTR              -0.886      0.051    -17.422      0.000
+    LMCO              -0.997      0.009   -109.923      0.000
+    LMBE               0.063      0.101      0.622      0.534
+    LMUN               0.619      0.073      8.496      0.000
+
+ SIN1     BY
+    LMSD               0.000      0.000    999.000    999.000
+    LMST               0.567      0.075      7.543      0.000
+    LMHE               0.809      0.066     12.281      0.000
+    LMAC               0.879      0.060     14.655      0.000
+    LMPO               0.842      0.056     15.024      0.000
+    LMSE              -0.160      0.108     -1.483      0.138
+    LMTR              -0.464      0.097     -4.769      0.000
+    LMCO              -0.082      0.110     -0.744      0.457
+    LMBE              -0.998      0.006   -157.580      0.000
+    LMUN              -0.785      0.057    -13.671      0.000
+
+ COS2     BY
+    LMSD               1.000      0.000    999.000    999.000
+    LMST               0.356      0.171      2.089      0.037
+    LMHE              -0.307      0.213     -1.444      0.149
+    LMAC              -0.546      0.211     -2.587      0.010
+    LMPO              -0.417      0.189     -2.210      0.027
+    LMSE               0.949      0.069     13.766      0.000
+    LMTR               0.570      0.180      3.163      0.002
+    LMCO               0.987      0.036     27.295      0.000
+    LMBE              -0.992      0.025    -39.240      0.000
+    LMUN              -0.233      0.180     -1.294      0.196
+
+ SIN2     BY
+    LMSD               0.000      0.000    999.000    999.000
+    LMST               0.934      0.065     14.352      0.000
+    LMHE               0.952      0.069     13.831      0.000
+    LMAC              -0.838      0.137     -6.099      0.000
+    LMPO              -0.909      0.086    -10.511      0.000
+    LMSE               0.316      0.207      1.523      0.128
+    LMTR               0.821      0.125      6.566      0.000
+    LMCO               0.163      0.218      0.749      0.454
+    LMBE              -0.125      0.200     -0.624      0.532
+    LMUN              -0.972      0.043    -22.443      0.000
+
+ GEN      WITH
+    COS1               0.000      0.000    999.000    999.000
+    SIN1               0.000      0.000    999.000    999.000
+    COS2               0.000      0.000    999.000    999.000
+    SIN2               0.000      0.000    999.000    999.000
+
+ COS1     WITH
+    SIN1               0.000      0.000    999.000    999.000
+    COS2               0.000      0.000    999.000    999.000
+    SIN2               0.000      0.000    999.000    999.000
+
+ SIN1     WITH
+    COS2               0.000      0.000    999.000    999.000
+    SIN2               0.000      0.000    999.000    999.000
+
+ COS2     WITH
+    SIN2               0.000      0.000    999.000    999.000
+
+ Intercepts
+    MSD                4.771      0.024    199.339      0.000
+    MST                3.200      0.031    103.113      0.000
+    MHE                3.625      0.031    118.437      0.000
+    MAC                3.659      0.030    120.161      0.000
+    MPO                3.237      0.026    125.029      0.000
+    MSE                4.032      0.032    126.623      0.000
+    MTR                3.780      0.029    130.224      0.000
+    MCO                3.897      0.033    117.892      0.000
+    MBE                5.226      0.018    285.859      0.000
+    MUN                5.142      0.018    285.502      0.000
+
+ Variances
+    GEN                0.343      0.016     21.016      0.000
+    COS1               0.577      0.017     34.621      0.000
+    SIN1               0.577      0.017     34.621      0.000
+    COS2               0.080      0.011      7.543      0.000
+    SIN2               0.080      0.011      7.543      0.000
+
+ Residual Variances
+    MSD                0.432      0.028     15.683      0.000
+    MST                0.482      0.054      8.958      0.000
+    MHE                0.696      0.039     17.859      0.000
+    MAC                0.720      0.039     18.407      0.000
+    MPO                0.214      0.040      5.400      0.000
+    MSE                0.562      0.039     14.346      0.000
+    MTR                0.632      0.035     18.283      0.000
+    MCO                0.646      0.041     15.656      0.000
+    MBE                0.181      0.028      6.461      0.000
+    MUN                0.244      0.020     12.050      0.000
+    LMSD               0.000      0.000    999.000    999.000
+    LMST               0.000      0.000    999.000    999.000
+    LMHE               0.000      0.000    999.000    999.000
+    LMAC               0.000      0.000    999.000    999.000
+    LMPO               0.000      0.000    999.000    999.000
+    LMSE               0.000      0.000    999.000    999.000
+    LMTR               0.000      0.000    999.000    999.000
+    LMCO               0.000      0.000    999.000    999.000
+    LMBE               0.000      0.000    999.000    999.000
+    LMUN               0.000      0.000    999.000    999.000
+
+New/Additional Parameters
+    T_02               6.886      0.091     75.410      0.000
+    T_03               0.942      0.112      8.417      0.000
+    T_04               2.068      0.126     16.426      0.000
+    T_05               2.141      0.104     20.640      0.000
+    T_06               3.302      0.109     30.235      0.000
+    T_07               3.624      0.110     33.029      0.000
+    T_08               3.224      0.111     29.146      0.000
+    T_09               4.775      0.101     47.269      0.000
+    T_10               5.380      0.093     57.981      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.290E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+MODEL COMMAND WITH FINAL ESTIMATES USED AS STARTING VALUES
+
+     lmsd BY msd*0.49279;
+     lmst BY mst*0.80882;
+     lmhe BY mhe*0.63913;
+     lmac BY mac*0.61068;
+     lmpo BY mpo*0.75890;
+     lmse BY mse*0.79465;
+     lmtr BY mtr*0.60079;
+     lmco BY mco*0.80057;
+     lmbe BY mbe*0.46244;
+     lmun BY mun*0.37227;
+
+     gen BY lmsd@1;
+     gen BY lmst@1;
+     gen BY lmhe@1;
+     gen BY lmac@1;
+     gen BY lmpo@1;
+     gen BY lmse@1;
+     gen BY lmtr@1;
+     gen BY lmco@1;
+     gen BY lmbe@1;
+     gen BY lmun@1;
+     cos1 BY lmsd@1;
+     cos1 BY lmst*0.82354 (c1_02);
+     cos1 BY lmhe*0.58844 (c1_03);
+     cos1 BY lmac*-0.47657 (c1_04);
+     cos1 BY lmpo*-0.54000 (c1_05);
+     cos1 BY lmse*-0.98714 (c1_06);
+     cos1 BY lmtr*-0.88607 (c1_07);
+     cos1 BY lmco*-0.99663 (c1_08);
+     cos1 BY lmbe*0.06269 (c1_09);
+     cos1 BY lmun*0.61908 (c1_10);
+     sin1 BY lmsd@0;
+     sin1 BY lmst*0.56726 (s1_02);
+     sin1 BY lmhe*0.80854 (s1_03);
+     sin1 BY lmac*0.87914 (s1_04);
+     sin1 BY lmpo*0.84167 (s1_05);
+     sin1 BY lmse*-0.15985 (s1_06);
+     sin1 BY lmtr*-0.46356 (s1_07);
+     sin1 BY lmco*-0.08198 (s1_08);
+     sin1 BY lmbe*-0.99803 (s1_09);
+     sin1 BY lmun*-0.78532 (s1_10);
+     cos2 BY lmsd@1;
+     cos2 BY lmst*0.35644 (c2_02);
+     cos2 BY lmhe*-0.30747 (c2_03);
+     cos2 BY lmac*-0.54576 (c2_04);
+     cos2 BY lmpo*-0.41680 (c2_05);
+     cos2 BY lmse*0.94890 (c2_06);
+     cos2 BY lmtr*0.57022 (c2_07);
+     cos2 BY lmco*0.98656 (c2_08);
+     cos2 BY lmbe*-0.99214 (c2_09);
+     cos2 BY lmun*-0.23347 (c2_10);
+     sin2 BY lmsd@0;
+     sin2 BY lmst*0.93432 (s2_02);
+     sin2 BY lmhe*0.95156 (s2_03);
+     sin2 BY lmac*-0.83794 (s2_04);
+     sin2 BY lmpo*-0.90900 (s2_05);
+     sin2 BY lmse*0.31558 (s2_06);
+     sin2 BY lmtr*0.82149 (s2_07);
+     sin2 BY lmco*0.16340 (s2_08);
+     sin2 BY lmbe*-0.12514 (s2_09);
+     sin2 BY lmun*-0.97236 (s2_10);
+
+     gen WITH cos1@0;
+     gen WITH sin1@0;
+     gen WITH cos2@0;
+     gen WITH sin2@0;
+     cos1 WITH sin1@0;
+     cos1 WITH cos2@0;
+     cos1 WITH sin2@0;
+     sin1 WITH cos2@0;
+     sin1 WITH sin2@0;
+     cos2 WITH sin2@0;
+
+     [ msd*4.77064 ];
+     [ mst*3.20039 ];
+     [ mhe*3.62548 ];
+     [ mac*3.65944 ];
+     [ mpo*3.23651 ];
+     [ mse*4.03183 ];
+     [ mtr*3.77989 ];
+     [ mco*3.89721 ];
+     [ mbe*5.22585 ];
+     [ mun*5.14195 ];
+
+     msd*0.43247;
+     mst*0.48159;
+     mhe*0.69555;
+     mac*0.71988;
+     mpo*0.21368;
+     mse*0.56249;
+     mtr*0.63242;
+     mco*0.64599;
+     mbe*0.18051;
+     mun*0.24417;
+     lmsd@0;
+     lmst@0;
+     lmhe@0;
+     lmac@0;
+     lmpo@0;
+     lmse@0;
+     lmtr@0;
+     lmco@0;
+     lmbe@0;
+     lmun@0;
+     gen*0.34329 (b0);
+     cos1*0.57695 (b1);
+     sin1*0.57695 (b1);
+     cos2*0.07976 (b2);
+     sin2*0.07976 (b2);
+
+     ! NEW statements in MODEL CONSTRAINT
+     NEW(t_02*6.88636);
+     NEW(t_03*0.94166);
+     NEW(t_04*2.06755);
+     NEW(t_05*2.14123);
+     NEW(t_06*3.30213);
+     NEW(t_07*3.62360);
+     NEW(t_08*3.22366);
+     NEW(t_09*4.77513);
+     NEW(t_10*5.37997);
+
+
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                  1             2             3             4             5
+
+
+           NU
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                  6             7             8             9            10
+
+
+           LAMBDA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ MSD               11             0             0             0             0
+ MST                0            12             0             0             0
+ MHE                0             0            13             0             0
+ MAC                0             0             0            14             0
+ MPO                0             0             0             0            15
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+
+
+           LAMBDA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ MSD                0             0             0             0             0
+ MST                0             0             0             0             0
+ MHE                0             0             0             0             0
+ MAC                0             0             0             0             0
+ MPO                0             0             0             0             0
+ MSE               16             0             0             0             0
+ MTR                0            17             0             0             0
+ MCO                0             0            18             0             0
+ MBE                0             0             0            19             0
+ MUN                0             0             0             0            20
+
+
+           LAMBDA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ MSD                0             0             0             0             0
+ MST                0             0             0             0             0
+ MHE                0             0             0             0             0
+ MAC                0             0             0             0             0
+ MPO                0             0             0             0             0
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+
+
+           THETA
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD               21
+ MST                0            22
+ MHE                0             0            23
+ MAC                0             0             0            24
+ MPO                0             0             0             0            25
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+
+
+           THETA
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE               26
+ MTR                0            27
+ MCO                0             0            28
+ MBE                0             0             0            29
+ MUN                0             0             0             0            30
+
+
+           ALPHA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           BETA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0             0             0             0             0
+ LMHE               0             0             0             0             0
+ LMAC               0             0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ GEN                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ COS2               0             0             0             0             0
+ SIN2               0             0             0             0             0
+
+
+           BETA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0             0             0             0             0
+ LMHE               0             0             0             0             0
+ LMAC               0             0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ GEN                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ COS2               0             0             0             0             0
+ SIN2               0             0             0             0             0
+
+
+           BETA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0            31            32            33            34
+ LMHE               0            35            36            37            38
+ LMAC               0            39            40            41            42
+ LMPO               0            43            44            45            46
+ LMSE               0            47            48            49            50
+ LMTR               0            51            52            53            54
+ LMCO               0            55            56            57            58
+ LMBE               0            59            60            61            62
+ LMUN               0            63            64            65            66
+ GEN                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ COS2               0             0             0             0             0
+ SIN2               0             0             0             0             0
+
+
+           PSI
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD               0
+ LMST               0             0
+ LMHE               0             0             0
+ LMAC               0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ GEN                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ COS2               0             0             0             0             0
+ SIN2               0             0             0             0             0
+
+
+           PSI
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSE               0
+ LMTR               0             0
+ LMCO               0             0             0
+ LMBE               0             0             0             0
+ LMUN               0             0             0             0             0
+ GEN                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ COS2               0             0             0             0             0
+ SIN2               0             0             0             0             0
+
+
+           PSI
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ GEN               67
+ COS1               0            68
+ SIN1               0             0            68
+ COS2               0             0             0            69
+ SIN2               0             0             0             0            69
+
+
+     PARAMETER SPECIFICATION FOR THE ADDITIONAL PARAMETERS
+
+
+           New/Additional Parameters
+              T_02          T_03          T_04          T_05          T_06
+              ________      ________      ________      ________      ________
+                   70            71            72            73            74
+
+
+           New/Additional Parameters
+              T_07          T_08          T_09          T_10
+              ________      ________      ________      ________
+                   75            76            77            78
+
+
+     STARTING VALUES
+
+
+           NU
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                4.771         3.200         3.626         3.660         3.237
+
+
+           NU
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                4.033         3.780         3.897         5.226         5.142
+
+
+           LAMBDA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ MSD            0.800         0.000         0.000         0.000         0.000
+ MST            0.000         0.800         0.000         0.000         0.000
+ MHE            0.000         0.000         0.800         0.000         0.000
+ MAC            0.000         0.000         0.000         0.800         0.000
+ MPO            0.000         0.000         0.000         0.000         0.800
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.800         0.000         0.000         0.000         0.000
+ MTR            0.000         0.800         0.000         0.000         0.000
+ MCO            0.000         0.000         0.800         0.000         0.000
+ MBE            0.000         0.000         0.000         0.800         0.000
+ MUN            0.000         0.000         0.000         0.000         0.800
+
+
+           LAMBDA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.500
+ MST            0.000         0.500
+ MHE            0.000         0.000         0.500
+ MAC            0.000         0.000         0.000         0.500
+ MPO            0.000         0.000         0.000         0.000         0.500
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            0.500
+ MTR            0.000         0.500
+ MCO            0.000         0.000         0.500
+ MBE            0.000         0.000         0.000         0.500
+ MUN            0.000         0.000         0.000         0.000         0.500
+
+
+           ALPHA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD           0.000         0.000         0.000         0.000         0.000
+ LMST           0.000         0.000         0.000         0.000         0.000
+ LMHE           0.000         0.000         0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ GEN            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ COS2           0.000         0.000         0.000         0.000         0.000
+ SIN2           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSD           0.000         0.000         0.000         0.000         0.000
+ LMST           0.000         0.000         0.000         0.000         0.000
+ LMHE           0.000         0.000         0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ GEN            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ COS2           0.000         0.000         0.000         0.000         0.000
+ SIN2           0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ LMSD           1.000         1.000         0.000         1.000         0.000
+ LMST           1.000         0.990        -0.130         0.970        -0.250
+ LMHE           1.000         0.970         0.260         0.870         0.500
+ LMAC           1.000         0.580         0.820        -0.340         0.940
+ LMPO           1.000         0.440         0.900        -0.610         0.790
+ LMSE           1.000        -0.170         0.990        -0.950        -0.330
+ LMTR           1.000        -0.320         0.950        -0.800        -0.600
+ LMCO           1.000        -0.280         0.960        -0.840        -0.540
+ LMBE           1.000         0.290         0.960        -0.840         0.550
+ LMUN           1.000         0.910        -0.420         0.650        -0.760
+ GEN            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ COS2           0.000         0.000         0.000         0.000         0.000
+ SIN2           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD           0.000
+ LMST           0.000         0.000
+ LMHE           0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ GEN            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ COS2           0.000         0.000         0.000         0.000         0.000
+ SIN2           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSE           0.000
+ LMTR           0.000         0.000
+ LMCO           0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ GEN            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ COS2           0.000         0.000         0.000         0.000         0.000
+ SIN2           0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              GEN           COS1          SIN1          COS2          SIN2
+              ________      ________      ________      ________      ________
+ GEN            0.100
+ COS1           0.000         0.500
+ SIN1           0.000         0.000         0.500
+ COS2           0.000         0.000         0.000         0.100
+ SIN2           0.000         0.000         0.000         0.000         0.100
+
+
+     STARTING VALUES FOR THE ADDITIONAL PARAMETERS
+
+
+           New/Additional Parameters
+              T_02          T_03          T_04          T_05          T_06
+              ________      ________      ________      ________      ________
+                6.888         0.952         2.074         2.147         3.305
+
+
+           New/Additional Parameters
+              T_07          T_08          T_09          T_10
+              ________      ________      ________      ________
+                3.628         3.231         4.773         5.377
+
+
+     Beginning Time:  14:41:54
+        Ending Time:  14:41:55
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen

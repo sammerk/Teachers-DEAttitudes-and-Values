@@ -1,0 +1,67 @@
+TITLE:
+Perf.-Circ.;
+DATA:
+FILE = "MPlus_Files/perfect_circumplex.dat";
+ 
+VARIABLE:
+NAMES = msd mst mhe mac mpo mse mtr mco mbe mun; 
+ MISSING=.;
+ 
+MODEL:
+lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+ msd-mun*0.5;
+ lmsd-lmun@0;
+ 
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+
+ gen-sin1 with gen-sin1@0;
+MODEL CONSTRAINT:
+b0 > 0;
+ b1 > 0;
+ 
+ b0 = 1 - b1;
+ 
+ c1_02 = cos(0.6283185);  s1_02 = sin(0.6283185);
+ c1_03 = cos(1.2566371);  s1_03 = sin(1.2566371);
+ c1_04 = cos(1.8849556);  s1_04 = sin(1.8849556);
+ c1_05 = cos(2.5132741);  s1_05 = sin(2.5132741);
+ c1_06 = cos(3.1415927);  s1_06 = sin(3.1415927);
+ c1_07 = cos(3.7699112);  s1_07 = sin(3.7699112);
+ c1_08 = cos(4.3982297);  s1_08 = sin(4.3982297);
+ c1_09 = cos(5.0265482);  s1_09 = sin(5.0265482);
+ c1_10 = cos(5.6548668);  s1_10 = sin(5.6548668);

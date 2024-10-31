@@ -1,0 +1,100 @@
+---
+title: "Teachers Attitudes Towards Democracy Education as a Function of Their Values"
+shorttitle: "Correlational Evidence from Germany"
+author:
+  - name: Samuel Merk
+    corresponding: true
+    orcid: 0000-0003-2594-5337
+    email: merk@ph-karlsruhe.de
+    affiliations:
+      - name: Karlsruhe University of Education
+        address: Bismarckstraße 10
+        city: Karlsruhe
+        region: Baden-Württemberg
+        country: Germany
+        postal-code: 76133
+    roles:
+      - conceptualization	
+      - data curation	
+      - formal analysis	
+      - funding acquisition	
+      - investigation	
+      - methodology	
+      - validation	
+      - visualization	
+      - writing original draft	
+      - writing review & editing	
+  - name: Nicolas Hübner
+    orcid: 0000-0003-3528-8086
+    email: nicolas.hübner@ph-karlsruhe.de
+    affiliations:
+      - name: Eberhard Karls Universität Tübingen
+    roles:
+      - conceptualization	
+      - writing review & editing	
+  - name: Gabriel Nagy
+    orcid: 0000-0001-6897-212X
+    email: nagy@ipn.uni-kiel.de
+    affiliations:
+      - name: Leibniz Institute for Science and Mathematics Education
+    roles:
+      - software
+      - formal analysis	
+      - methodology	
+      - validation
+      - writing review & editing
+author-note:
+  status-changes: 
+    affiliation-change: ~
+    deceased: ~
+  disclosures:
+    study-registration: ~
+    data-sharing: ~
+    related-report: ~
+    conflict-of-interest: ~
+    financial-support: Data collection was funded by Verband Bildung und Erziehung Germany.
+    gratitude: ~
+    authorship-agreements: ~
+abstract: "(Max 100 Words) In a time of multiple crisis, educational goals beyond academic achievement get momentum. We report on how important a representative sample of teachers and parents of schoolchildren from Germany consider educational goals provided by law and how these preferences can be seen as a function of their values. "
+keywords: [Democracy Education, Teacher, Values]
+bibliography: bibliography.bib
+format:
+  apaquarto-pdf:
+    documentmode: art
+  apaquarto-typst: 
+    keep-typ: true
+  apaquarto-docx: default
+  apaquarto-html: default
+---
+
+For decades, if not for centuries, there is a vivid public and academic discussion on "what personal qualities are required for being a good teacher" [@carr2010, pp.63]. This isn't surprising as students in OECD countries perceived in 2023 on average 7.634 hours of instruction during their primary and lower secondary education [@oecd2023] and---at least in the public opinion---teachers have crucial impact on student learning. Due to this central role in the education system, researchers have spent huge effort in investigating which competencies and characteristics are most predictive for student success [@cochran-smith2005]. But in times of climate change, social divide, rising authoritanism and other crisis [@lawrence2022global] educational goals beyond academic achievement like practicing tolerance or democracy education may get momentum. But which are the most favoured educational goals by teachers and parents and where do they come from? In this brief, we hypothesise educational goals as (among others) functions of human values. These values have been conceptualized as abstract, and trans-situational ideals or guiding principles [@rokeach1973a, @schwartz1987] like self-direction (e.g. creativity, freedom) or power (e.g. wealth, social power) which are mainly positive and can be ordered in a two-dimensional, circular structure, positioning similar values (like hedonism and stimulation) at similar angles and opposing values (like stimulation and conformity) opposite to each other [see @fig-theo_value_circumplex]. Due to their abstract and trans-situational nature, values enact behavior not themselfes but rather guide individuals goals and attitudes towards specific and real world objects.
+
+
+
+
+# Method
+
+## Participants
+
+## Measures
+
+## Procedure
+
+# Results
+
+# Discussion
+
+## Limitations and Future Directions
+
+## Conclusion
+
+# References
+
+<!-- References will auto-populate in the refs div below -->
+
+::: {#refs}
+:::
+
+# Appendix
+
+# Title for Appendix

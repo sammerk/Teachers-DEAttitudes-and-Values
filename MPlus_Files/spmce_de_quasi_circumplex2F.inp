@@ -1,0 +1,193 @@
+TITLE:
+SPMCE Democracy Ed Quasi-Circ. 2F
+DATA:
+FILE = "MPlus_Files/spmce_de_quasi_circumplex2F.dat";
+ 
+VARIABLE:
+NAMES = msd mst mhe mac mpo mse mtr mco mbe mun f1_1; 
+ MISSING=.;
+ 
+MODEL:
+lmsd by msd*0.49515;
+            lmst by mst*0.80853;
+            lmhe by mhe*0.63985;
+            lmac by mac*0.61272;
+            lmpo by mpo*0.75586;
+            lmse by mse*0.79618;
+            lmtr by mtr*0.60242;
+            lmco by mco*0.79836;
+            lmbe by mbe*0.46238;
+            lmun by mun*0.37573;
+
+            rmsd by lmsd*1.328 (u01);
+            rmst by lmst*0.855 (u02);
+            rmhe by lmhe*1.303 (u03);
+            rmac by lmac*1.381 (u04);
+            rmpo by lmpo*0.613 (u05);
+            rmse by lmse*0.941 (u06);
+            rmtr by lmtr*1.320 (u07);
+            rmco by lmco*1.007 (u08);
+            rmbe by lmbe*0.915 (u09);
+            rmun by lmun*1.312 (u10);
+
+            lmsd-lmun@0;
+            rmsd-rmun@1;
+            rmsd-rmun with rmsd-rmun@0;
+
+            msd-mun@0;
+
+
+            lev by lmsd-lmun*0.59 (b0);
+
+            cos1 by lmsd* 0.760 (b1);
+            cos1 by lmst* 0.626 (c1_02);
+            cos1 by lmhe* 0.441 (c1_03);
+            cos1 by lmac*-0.367 (c1_04);
+            cos1 by lmpo*-0.414 (c1_05);
+            cos1 by lmse*-0.750 (c1_06);
+            cos1 by lmtr*-0.672 (c1_07);
+            cos1 by lmco*-0.758 (c1_08);
+            cos1 by lmbe* 0.046 (c1_09);
+            cos1 by lmun* 0.469 (c1_10);
+
+            sin1 by lmsd@ 0.000;
+            sin1 by lmst* 0.432 (s1_02);
+            sin1 by lmhe* 0.620 (s1_03);
+            sin1 by lmac* 0.666 (s1_04);
+            sin1 by lmpo* 0.638 (s1_05);
+            sin1 by lmse*-0.123 (s1_06);
+            sin1 by lmtr*-0.355 (s1_07);
+            sin1 by lmco*-0.068 (s1_08);
+            sin1 by lmbe*-0.759 (s1_09);
+            sin1 by lmun*-0.598 (s1_10);
+
+            cos2 by lmsd* 0.280 (b2);
+            cos2 by lmst* 0.100 (c2_02);
+            cos2 by lmhe*-0.093 (c2_03);
+            cos2 by lmac*-0.152 (c2_04);
+            cos2 by lmpo*-0.115 (c2_05);
+            cos2 by lmse* 0.269 (c2_06);
+            cos2 by lmtr* 0.160 (c2_07);
+            cos2 by lmco* 0.279 (c2_08);
+            cos2 by lmbe*-0.282 (c2_09);
+            cos2 by lmun*-0.068 (c2_10);
+
+            sin2 by lmsd@0.0;
+            sin2 by lmst* 0.266 (s2_02);
+            sin2 by lmhe* 0.268 (s2_03);
+            sin2 by lmac*-0.240 (s2_04);
+            sin2 by lmpo*-0.259 (s2_05);
+            sin2 by lmse* 0.091 (s2_06);
+            sin2 by lmtr* 0.235 (s2_07);
+            sin2 by lmco* 0.050 (s2_08);
+            sin2 by lmbe*-0.034 (s2_09);
+            sin2 by lmun*-0.276 (s2_10);
+
+            lev-sin2@1 ;
+
+            lev-sin2 with lev-sin2@0;
+            lev-sin2 with rmsd-rmun@0;
+
+            !extension
+
+            ly by f1_1*1;
+            f1_1@0;
+            ly@1;
+
+            lev  WITH ly* 0.12467 (r10);
+            cos1 WITH ly* 0.03016 (rc1);
+            sin1 WITH ly*-0.23793 (rs1);
+            cos2 WITH ly*-0.08606 (rc2);
+            sin2 WITH ly*-0.02217 (rs2);
+
+
+            ly with rmsd* 0.00126  (ru01);
+            ly with rmst* 0.00290  (ru02);
+            ly with rmhe*-0.00019  (ru03);
+            ly with rmac* 0.01425  (ru04);
+            ly with rmpo*-0.04127  (ru05);
+            ly with rmse* 0.01500  (ru06);
+            ly with rmtr* 0.01200  (ru07);
+            ly with rmco* 0.04851  (ru08);
+            ly with rmbe*-0.07711  (ru09);
+            ly with rmun* 0.08375  (ru10);
+MODEL CONSTRAINT:
+0 = 1 - sqrt(b0**2 + b1**2 + b2**2);
+            
+            b0 > 0;
+            b1 > 0;
+            b2 > 0;
+            
+            new(tst*6.88777);
+            new(the*0.95234);
+            new(tac*2.07419);
+            new(tpo*2.14695);
+            new(tse*3.30457);
+            new(ttr*3.62782);
+            new(tco*3.23080);
+            new(tbe*4.77319);
+            new(tun*5.37745);
+            
+            c1_02 = b1*cos(tst);  s1_02 = b1*sin(tst);
+            c1_03 = b1*cos(the);  s1_03 = b1*sin(the);
+            c1_04 = b1*cos(tac);  s1_04 = b1*sin(tac);
+            c1_05 = b1*cos(tpo);  s1_05 = b1*sin(tpo);
+            c1_06 = b1*cos(tse);  s1_06 = b1*sin(tse);
+            c1_07 = b1*cos(ttr);  s1_07 = b1*sin(ttr);
+            c1_08 = b1*cos(tco);  s1_08 = b1*sin(tco);
+            c1_09 = b1*cos(tbe);  s1_09 = b1*sin(tbe);
+            c1_10 = b1*cos(tun);  s1_10 = b1*sin(tun);
+            
+            
+            c2_02 = b2*cos(2*tst);  s2_02 = b2*sin(2*tst);
+            c2_03 = b2*cos(2*the);  s2_03 = b2*sin(2*the);
+            c2_04 = b2*cos(2*tac);  s2_04 = b2*sin(2*tac);
+            c2_05 = b2*cos(2*tpo);  s2_05 = b2*sin(2*tpo);
+            c2_06 = b2*cos(2*tse);  s2_06 = b2*sin(2*tse);
+            c2_07 = b2*cos(2*ttr);  s2_07 = b2*sin(2*ttr);
+            c2_08 = b2*cos(2*tco);  s2_08 = b2*sin(2*tco);
+            c2_09 = b2*cos(2*tbe);  s2_09 = b2*sin(2*tbe);
+            c2_10 = b2*cos(2*tun);  s2_10 = b2*sin(2*tun);
+            
+            ! Extension
+            
+            new(g0*0.217);
+            new(ga*0.313);
+            new(da*4.838);
+            
+            r10 = g0*b0;
+            rc1 = ga*b1*cos(1*da);
+            rs1 = ga*b1*sin(1*da);
+            rc2 = ga*b2*cos(2*da);
+            rs2 = ga*b2*sin(2*da);
+            
+            
+            0 = 
+            (b0*ru01)/u01+(b0*ru02)/u02+(b0*ru03)/u03+(b0*ru04)/u04+(b0*ru05)/u05+
+            (b0*ru06)/u06+(b0*ru07)/u07+(b0*ru08)/u08+(b0*ru09)/u09+(b0*ru10)/u10;
+            
+            0 = 
+            ((b1**2*cos(1*(0  -da))+b2**2*cos(2*(0  -da)))*ru01)/u01+
+            ((b1**2*cos(1*(tst-da))+b2**2*cos(2*(tst-da)))*ru02)/u02+
+            ((b1**2*cos(1*(the-da))+b2**2*cos(2*(the-da)))*ru03)/u03+
+            ((b1**2*cos(1*(tac-da))+b2**2*cos(2*(tac-da)))*ru04)/u04+
+            ((b1**2*cos(1*(tpo-da))+b2**2*cos(2*(tpo-da)))*ru05)/u05+
+            ((b1**2*cos(1*(tse-da))+b2**2*cos(2*(tse-da)))*ru06)/u06+
+            ((b1**2*cos(1*(ttr-da))+b2**2*cos(2*(ttr-da)))*ru07)/u07+
+            ((b1**2*cos(1*(tco-da))+b2**2*cos(2*(tco-da)))*ru08)/u08+
+            ((b1**2*cos(1*(tbe-da))+b2**2*cos(2*(tbe-da)))*ru09)/u09+
+            ((b1**2*cos(1*(tun-da))+b2**2*cos(2*(tun-da)))*ru10)/u10;
+            
+            0 = 
+            ((b1**2*sin(1*(da-0  ))+2*b2**2*sin(2*(da-0  )))*ru01)/u01+
+            ((b1**2*sin(1*(da-tst))+2*b2**2*sin(2*(da-tst)))*ru02)/u02+
+            ((b1**2*sin(1*(da-the))+2*b2**2*sin(2*(da-the)))*ru03)/u03+
+            ((b1**2*sin(1*(da-tac))+2*b2**2*sin(2*(da-tac)))*ru04)/u04+
+            ((b1**2*sin(1*(da-tpo))+2*b2**2*sin(2*(da-tpo)))*ru05)/u05+
+            ((b1**2*sin(1*(da-tse))+2*b2**2*sin(2*(da-tse)))*ru06)/u06+
+            ((b1**2*sin(1*(da-ttr))+2*b2**2*sin(2*(da-ttr)))*ru07)/u07+
+            ((b1**2*sin(1*(da-tco))+2*b2**2*sin(2*(da-tco)))*ru08)/u08+
+            ((b1**2*sin(1*(da-tbe))+2*b2**2*sin(2*(da-tbe)))*ru09)/u09+
+            ((b1**2*sin(1*(da-tun))+2*b2**2*sin(2*(da-tun)))*ru10)/u10;
+OUTPUT:
+samp tech1 sval;

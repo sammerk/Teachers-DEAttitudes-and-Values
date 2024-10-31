@@ -1,0 +1,119 @@
+TITLE:
+Quasi-Circ. 2F
+DATA:
+FILE = "MPlus_Files/quasi_circumplex2F.dat";
+ 
+VARIABLE:
+NAMES = msd mst mhe mac mpo mse mtr mco mbe mun; 
+ MISSING=.;
+ 
+MODEL:
+lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+
+ msd-mun*0.5;
+
+ lmsd-lmun@0 ;
+
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ cos2 by lmsd@1.0;
+ cos2 by lmst* 0.97 (c2_02);
+ cos2 by lmhe* 0.87 (c2_03);
+ cos2 by lmac*-0.34 (c2_04);
+ cos2 by lmpo*-0.61 (c2_05);
+ cos2 by lmse*-0.95 (c2_06);
+ cos2 by lmtr*-0.80 (c2_07);
+ cos2 by lmco*-0.84 (c2_08);
+ cos2 by lmbe*-0.84 (c2_09);
+ cos2 by lmun* 0.65 (c2_10);
+
+ sin2 by lmsd@0.0;
+ sin2 by lmst*-0.25 (s2_02);
+ sin2 by lmhe* 0.50 (s2_03);
+ sin2 by lmac* 0.94 (s2_04);
+ sin2 by lmpo* 0.79 (s2_05);
+ sin2 by lmse*-0.33 (s2_06);
+ sin2 by lmtr*-0.60 (s2_07);
+ sin2 by lmco*-0.54 (s2_08);
+ sin2 by lmbe* 0.55 (s2_09);
+ sin2 by lmun*-0.76 (s2_10);
+
+
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+ cos2*0.1 (b2);
+ sin2*0.1 (b2);
+
+ gen-sin2 with gen-sin2@0;
+MODEL CONSTRAINT:
+b0 > 0;
+b1 > 0;
+b2 > 0;
+
+b0 = 1 - (b1 + b2);
+
+new(t_02*6.88779);
+new(t_03*0.95236);
+new(t_04*2.07423);
+new(t_05*2.14695);
+new(t_06*3.30459);
+new(t_07*3.62782);
+new(t_08*3.23085);
+new(t_09*4.77318);
+new(t_10*5.37742);
+
+c1_02 = cos(t_02);  s1_02 = sin(t_02);
+c1_03 = cos(t_03);  s1_03 = sin(t_03);
+c1_04 = cos(t_04);  s1_04 = sin(t_04);
+c1_05 = cos(t_05);  s1_05 = sin(t_05);
+c1_06 = cos(t_06);  s1_06 = sin(t_06);
+c1_07 = cos(t_07);  s1_07 = sin(t_07);
+c1_08 = cos(t_08);  s1_08 = sin(t_08);
+c1_09 = cos(t_09);  s1_09 = sin(t_09);
+c1_10 = cos(t_10);  s1_10 = sin(t_10);
+
+
+c2_02 = cos(2*t_02);  s2_02 = sin(2*t_02);
+c2_03 = cos(2*t_03);  s2_03 = sin(2*t_03);
+c2_04 = cos(2*t_04);  s2_04 = sin(2*t_04);
+c2_05 = cos(2*t_05);  s2_05 = sin(2*t_05);
+c2_06 = cos(2*t_06);  s2_06 = sin(2*t_06);
+c2_07 = cos(2*t_07);  s2_07 = sin(2*t_07);
+c2_08 = cos(2*t_08);  s2_08 = sin(2*t_08);
+c2_09 = cos(2*t_09);  s2_09 = sin(2*t_09);
+c2_10 = cos(2*t_10);  s2_10 = sin(2*t_10);
+OUTPUT:
+samp tech1 sval;

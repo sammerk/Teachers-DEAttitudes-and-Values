@@ -1,0 +1,1053 @@
+---
+title: "Parents Attitudes Towards Democracy Education as a Function of Their Values"
+subtitle: "Reproducible Documentation of Analysis"
+author: "Samuel Merk, Nikolas Hübner, Gabriel Nagy"
+format:
+  html: 
+    theme:
+      light: flatly
+      dark: darkly
+toc: true
+---
+
+# Data Wrangling
+## Libraries
+```{r}
+#| label: loading the libraries
+#| results: 'hide'
+#| message: FALSE
+#| warning: FALSE
+
+library(modelsummary)
+library(hrbrthemes)
+library(haven)
+library(reactable)
+library(brms)
+library(patchwork)
+library(skimr)
+library(MplusAutomation)
+library(ggrepel)
+library(ggdensity)
+library(knitr)
+library(geomtextpath)
+library(sjPlot)
+library(sjlabelled)
+library(occupar)
+library(tidyverse)
+```
+
+
+## Data Import
+###  Data german teachers
+```{r}
+#| label: import german teacher data
+#| message: false
+
+data <- read_spss("data/data_parents_raw.sav")%>% 
+  mutate(msb_1 = f5_1, # neue Ideen zu entwickeln und kreativ zu sein
+         mma_1 = f5_2, # Sie sollte viel Geld haben und teure Sachen besitzen wollen
+         muv_1 = f5_3, # Sollte es für wichtig halten, dass alle Menschen auf der Welt gleichbehandelt werden sollten
+         mle_1 = f5_4, # Sie sollte wollen, dass die Leute bewundern, was sie tut
+         msi_1 = f5_5, # sollte es wichtig sein, in einem sicheren Umfeld zu leben
+         mst_1 = f5_6, # sollte Überraschungen mögen und immer Ausschau nach neuen Aktivitäten halten
+         mko_1 = f5_7, # sollte glauben, dass die Menschen tun sollten, was man Ihnen sagt 
+         muv_2 = f5_8, # sollte es wichtig sein, Menschen zuzuhören, die anders sind als sie
+         mtr_1 = f5_9, # sollte versuchen, die Aufmerksamkeit nicht auf sich zu lenken
+         mhe_1 = f5_10, # sollte es wichtig sein, Spaß zu haben
+         msb_2 = f5_11, # sollte gerne frei und unabhängig von anderen sein
+         mbe_1 = f5_12, # sollte es wichtig sein, den Menschen um sie herum zu helfen
+         mle_2 = f5_13, # sollte es wichtig sein, sehr erfolgreich zu sein
+         msi_2 = f5_14, # sollte einen starken Staat wollen, der seine Bürger verteidigt
+         mst_2 = f5_15, # sollte das Abenteuer suchen und gerne Risiken eingehen
+         mko_2 = f5_16, # sich jederzeit korrekt zu verhalten
+         mma_2 = f5_17, # sollte es wichtig sein, dass andere sie respektieren
+         mbe_2 = f5_18, # sollte sich für Menschen einsetzen wollen, die ihr nahestehen
+         muv_3 = f5_19, # Umweltschutz sollte ihr wichtig sein
+         mtr_2 = f5_20, # Tradition sollte der Lehrperson wichtig sein
+         mhe_2 = f5_21  # sollte keine Gelegenheit auslassen, Spaß zu haben
+         ) %>% 
+  mutate(f1_1 = ifelse(f1_1 == 7, NA, 7-as.numeric(f1_1))) %>% 
+  mutate(across(c(msb_1, msb_2, mst_1, mst_2, mhe_1, mhe_2, mle_1, mle_2, 
+                  mma_1, mma_2, msi_1, msi_2, mtr_1, mtr_2, mko_1, mko_2, 
+                  mbe_1, mbe_2, muv_1, muv_2, muv_3), function(x) ifelse(x == 7, NA, x))) %>% 
+  mutate(across(c(msb_1, msb_2, mst_1, mst_2, mhe_1, mhe_2, mle_1, mle_2, 
+                  mma_1, mma_2, msi_1, msi_2, mtr_1, mtr_2, mko_1, mko_2, 
+                  mbe_1, mbe_2, muv_1, muv_2, muv_3), function(x) 7 - as.numeric(x))) |> 
+  mutate(
+   msd = rowMeans(across(c(msb_1, msb_2)), na.rm = T),
+   mst = rowMeans(across(c(mst_1, mst_2)), na.rm = T),
+   mhe = rowMeans(across(c(mhe_1, mhe_2)), na.rm = T),
+   mac = rowMeans(across(c(mle_1, mle_2)), na.rm = T),
+   mpo = rowMeans(across(c(mma_1, mma_2)), na.rm = T),
+   mse = rowMeans(across(c(msi_1, msi_2)), na.rm = T),
+   mtr = rowMeans(across(c(mtr_1, mtr_2)), na.rm = T),
+   mco = rowMeans(across(c(mko_1, mko_2)), na.rm = T),
+   mbe = rowMeans(across(c(mbe_1, mbe_2)), na.rm = T),
+   mun = rowMeans(across(c(muv_1, muv_2, muv_3)), na.rm = T),
+   sex = as.factor(ges), 
+   agekat = ordered(altkat))
+```
+
+
+## Data skim
+```{r}
+#| label: skimming data
+
+data |> 
+  skimr::skim()
+```
+
+## Covariates 
+
+
+# The structure of human values
+## Perfect circumplex model
+```{r}
+#| label: mplus code perfect circumplex
+
+model_perfect_circumplex <- 
+'lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+ msd-mun*0.5;
+ lmsd-lmun@0;
+ 
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+
+ gen-sin1 with gen-sin1@0;'
+  
+
+constraint_perfect_circumplex <- 
+'b0 > 0;
+ b1 > 0;
+ 
+ b0 = 1 - b1;
+ 
+ c1_02 = cos(0.6283185);  s1_02 = sin(0.6283185);
+ c1_03 = cos(1.2566371);  s1_03 = sin(1.2566371);
+ c1_04 = cos(1.8849556);  s1_04 = sin(1.8849556);
+ c1_05 = cos(2.5132741);  s1_05 = sin(2.5132741);
+ c1_06 = cos(3.1415927);  s1_06 = sin(3.1415927);
+ c1_07 = cos(3.7699112);  s1_07 = sin(3.7699112);
+ c1_08 = cos(4.3982297);  s1_08 = sin(4.3982297);
+ c1_09 = cos(5.0265482);  s1_09 = sin(5.0265482);
+ c1_10 = cos(5.6548668);  s1_10 = sin(5.6548668);'
+```
+
+
+```{r}
+#| label: run perfect circumplex
+#| cache: false
+
+# Define the MPlus Model
+perfect_circumplex_mod <- 
+  mplusObject(
+  TITLE = 'Perf.-Circ.;',
+  MODEL = model_perfect_circumplex,
+  MODELCONSTRAINT = constraint_perfect_circumplex,
+  rdata = data %>% 
+    select(msd, mst, mhe, mac, mpo, mse, mtr, mco, mbe, mun))
+
+# Run Model in Mplus
+perfect_circumplex_fit <- 
+  mplusModeler(perfect_circumplex_mod,
+             modelout = "MPlus_Files/perfect_circumplex.inp",
+             run = TRUE, quiet = FALSE, hashfilename = F)
+
+# Store fit indices
+fit_perfect_circumplex <-
+  tibble(
+    CFI = perfect_circumplex_fit$results$summaries$CFI,
+    SRMR = perfect_circumplex_fit$results$summaries$SRMR,
+    RMSEA_Estimate = perfect_circumplex_fit$results$summaries$RMSEA_Estimate,
+    ChiSqM_Value = perfect_circumplex_fit$results$summaries$ChiSqM_Value,
+    ChiSqM_DF = perfect_circumplex_fit$results$summaries$ChiSqM_DF
+  )
+
+```
+
+
+### Model Result
+```{r}
+#| label: fit perfect circumplex
+fit_perfect_circumplex %>%
+  kable(.)
+```
+
+
+## Quasi-Circumplex model (Cosine function model)
+```{r}
+#| label: mplus code componentes quasi circumplex
+model_quasi_circumplex <- 
+'lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+ msd-mun*0.5;
+ lmsd-lmun@0;
+ 
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+
+ gen-sin1 with gen-sin1@0;'
+
+constraint_quasi_circumplex <- 
+'b0 > 0;
+ b1 > 0;
+ 
+ b0 = 1 - b1;
+
+ new(tst*0.58);
+ new(the*0.42);
+ new(tac*1.61);
+ new(tpo*1.89);
+ new(tse*3.66);
+ new(ttr*3.97);
+ new(tco*3.46);
+ new(tbe*5.08);
+ new(tun*5.04);
+ 
+ c1_02 = cos(tst);  s1_02 = sin(tst);
+ c1_03 = cos(the);  s1_03 = sin(the);
+ c1_04 = cos(tac);  s1_04 = sin(tac);
+ c1_05 = cos(tpo);  s1_05 = sin(tpo);
+ c1_06 = cos(tse);  s1_06 = sin(tse);
+ c1_07 = cos(ttr);  s1_07 = sin(ttr);
+ c1_08 = cos(tco);  s1_08 = sin(tco);
+ c1_09 = cos(tbe);  s1_09 = sin(tbe);
+ c1_10 = cos(tun);  s1_10 = sin(tun);'
+```
+
+
+```{r}
+#| label: quasi circumplex
+#| cache: false
+
+quasi_circumplex_mod <- 
+  mplusObject(
+  TITLE = 'Quasi-Circ.',
+  MODEL = model_quasi_circumplex,
+  MODELCONSTRAINT = constraint_quasi_circumplex, 
+  OUTPUT = 'samp tech1 sval;',
+  rdata = data %>% 
+    select(msd, mst, mhe, mac, mpo, mse, mtr, mco, mbe, mun))
+
+# Run Model in Mplus
+quasi_circumplex_fit <- 
+  mplusModeler(quasi_circumplex_mod,
+             modelout = "MPlus_Files/quasi_circumplex.inp",
+             run = TRUE, quiet = FALSE, hashfilename = F)
+
+# Store fit indices and theta 
+fit_quasi_circumplex <-
+  tibble(
+    CFI = quasi_circumplex_fit$results$summaries$CFI,
+    SRMR = quasi_circumplex_fit$results$summaries$SRMR,
+    RMSEA_Estimate = quasi_circumplex_fit$results$summaries$RMSEA_Estimate,
+    ChiSqM_Value = quasi_circumplex_fit$results$summaries$ChiSqM_Value,
+    ChiSqM_DF = quasi_circumplex_fit$results$summaries$ChiSqM_DF
+  )
+
+thetas_quasi_circumplex <-
+  quasi_circumplex_fit$results$parameters$unstandardized %>%
+  as_tibble() %>%
+  filter(paramHeader == "New.Additional.Parameters") %>%
+  add_row(param = "TSD", est = 0) %>%
+  mutate(theta = est %% (2 * pi),
+         theta_grad = theta * 180 / pi)
+```
+
+### Model Result
+```{r}
+#| label: print fit quasi circumplex
+fit_quasi_circumplex %>% 
+  kable(.)
+```
+
+As the angular positions are the following
+```{r} 
+#| label: depict quasi circumplex, 
+#| echo: false
+#| fig-width: 5.8
+thetas_quasi_circumplex %>% 
+  arrange(theta_grad) |> 
+  ggplot(aes(x = 1, 
+                y = theta_grad, 
+                group = param)) +
+  geom_label_repel(aes(label = param)) + 
+  geom_point(aes(color = param)) + 
+  # geom_textpath(data = tibble(x = c(0,1),
+  #                             y = c(38.1, 38.1),
+  #                             text = "Stimulation"),
+  #               aes(x = x, y = y, label = text)) +
+  scale_x_continuous(breaks = c(), limits = c(0, 1)) +
+  scale_y_continuous(breaks = c(), limits = c(0, 360)) +
+  coord_polar(theta = "y", 
+              direction = -1, 
+              clip = "off",
+              start = 1/8*pi) + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position = "none") +
+  theme_minimal() + 
+  xlab("") + 
+  ylab("")
+```
+
+
+## Quasi-Circumplex model with 2 Fourier Components 
+```{r}
+#| label: mplus code componentes quasi circumplex 2F
+model_quasi_circumplex2F <- 
+'lmsd by msd*0.8;
+ lmst by mst*0.8;
+ lmhe by mhe*0.8;
+ lmac by mac*0.8;
+ lmpo by mpo*0.8;
+ lmse by mse*0.8;
+ lmtr by mtr*0.8;
+ lmco by mco*0.8;
+ lmbe by mbe*0.8;
+ lmun by mun*0.8;
+
+ msd-mun*0.5;
+
+ lmsd-lmun@0 ;
+
+ gen by lmsd-lmun@1;
+
+ cos1 by lmsd@1.0;
+ cos1 by lmst* 0.99 (c1_02);
+ cos1 by lmhe* 0.97 (c1_03);
+ cos1 by lmac* 0.58 (c1_04);
+ cos1 by lmpo* 0.44 (c1_05);
+ cos1 by lmse*-0.17 (c1_06);
+ cos1 by lmtr*-0.32 (c1_07);
+ cos1 by lmco*-0.28 (c1_08);
+ cos1 by lmbe* 0.29 (c1_09);
+ cos1 by lmun* 0.91 (c1_10);
+
+ sin1 by lmsd@0.0;
+ sin1 by lmst*-0.13 (s1_02);
+ sin1 by lmhe* 0.26 (s1_03);
+ sin1 by lmac* 0.82 (s1_04);
+ sin1 by lmpo* 0.90 (s1_05);
+ sin1 by lmse* 0.99 (s1_06);
+ sin1 by lmtr* 0.95 (s1_07);
+ sin1 by lmco* 0.96 (s1_08);
+ sin1 by lmbe* 0.96 (s1_09);
+ sin1 by lmun*-0.42 (s1_10);
+
+ cos2 by lmsd@1.0;
+ cos2 by lmst* 0.97 (c2_02);
+ cos2 by lmhe* 0.87 (c2_03);
+ cos2 by lmac*-0.34 (c2_04);
+ cos2 by lmpo*-0.61 (c2_05);
+ cos2 by lmse*-0.95 (c2_06);
+ cos2 by lmtr*-0.80 (c2_07);
+ cos2 by lmco*-0.84 (c2_08);
+ cos2 by lmbe*-0.84 (c2_09);
+ cos2 by lmun* 0.65 (c2_10);
+
+ sin2 by lmsd@0.0;
+ sin2 by lmst*-0.25 (s2_02);
+ sin2 by lmhe* 0.50 (s2_03);
+ sin2 by lmac* 0.94 (s2_04);
+ sin2 by lmpo* 0.79 (s2_05);
+ sin2 by lmse*-0.33 (s2_06);
+ sin2 by lmtr*-0.60 (s2_07);
+ sin2 by lmco*-0.54 (s2_08);
+ sin2 by lmbe* 0.55 (s2_09);
+ sin2 by lmun*-0.76 (s2_10);
+
+
+
+ gen*0.1 (b0);
+ cos1*0.5 (b1);
+ sin1*0.5 (b1);
+ cos2*0.1 (b2);
+ sin2*0.1 (b2);
+
+ gen-sin2 with gen-sin2@0;'
+
+constraint_quasi_circumplex2F <- 
+'b0 > 0;
+b1 > 0;
+b2 > 0;
+
+b0 = 1 - (b1 + b2);
+
+new(tst*6.88779);
+new(the*0.95236);
+new(tac*2.07423);
+new(tpo*2.14695);
+new(tse*3.30459);
+new(ttr*3.62782);
+new(tco*3.23085);
+new(tbe*4.77318);
+new(tun*5.37742);
+
+c1_02 = cos(tst);  s1_02 = sin(tst);
+c1_03 = cos(the);  s1_03 = sin(the);
+c1_04 = cos(tac);  s1_04 = sin(tac);
+c1_05 = cos(tpo);  s1_05 = sin(tpo);
+c1_06 = cos(tse);  s1_06 = sin(tse);
+c1_07 = cos(ttr);  s1_07 = sin(ttr);
+c1_08 = cos(tco);  s1_08 = sin(tco);
+c1_09 = cos(tbe);  s1_09 = sin(tbe);
+c1_10 = cos(tun);  s1_10 = sin(tun);
+
+
+c2_02 = cos(2*tst);  s2_02 = sin(2*tst);
+c2_03 = cos(2*the);  s2_03 = sin(2*the);
+c2_04 = cos(2*tac);  s2_04 = sin(2*tac);
+c2_05 = cos(2*tpo);  s2_05 = sin(2*tpo);
+c2_06 = cos(2*tse);  s2_06 = sin(2*tse);
+c2_07 = cos(2*ttr);  s2_07 = sin(2*ttr);
+c2_08 = cos(2*tco);  s2_08 = sin(2*tco);
+c2_09 = cos(2*tbe);  s2_09 = sin(2*tbe);
+c2_10 = cos(2*tun);  s2_10 = sin(2*tun);'
+```
+
+
+```{r}
+#| label: quasi circumplex 2F
+#| cache: false
+
+quasi_circumplex2F_mod <- 
+  mplusObject(
+  TITLE = 'Quasi-Circ. 2F',
+  MODEL = model_quasi_circumplex2F,
+  MODELCONSTRAINT = constraint_quasi_circumplex2F, 
+  ANALYSIS = "ITERATIONS = 5000;",
+  OUTPUT = 'samp tech1 sval;',
+  rdata = data %>% 
+    select(msd, mst, mhe, mac, mpo, mse, mtr, mco, mbe, mun))
+
+# Run Model in Mplus
+quasi_circumplex2F_fit <- 
+  mplusModeler(quasi_circumplex2F_mod,
+             modelout = "MPlus_Files/quasi_circumplex2F.inp",
+             run = TRUE, quiet = FALSE, hashfilename = F)
+
+# Store fit indices and theta 
+fit_quasi_circumplex2F <-
+  tibble(
+    CFI = quasi_circumplex2F_fit$results$summaries$CFI,
+    SRMR = quasi_circumplex2F_fit$results$summaries$SRMR,
+    RMSEA_Estimate = quasi_circumplex2F_fit$results$summaries$RMSEA_Estimate,
+    ChiSqM_Value = quasi_circumplex2F_fit$results$summaries$ChiSqM_Value,
+    ChiSqM_DF = quasi_circumplex2F_fit$results$summaries$ChiSqM_DF
+  )
+
+thetas_quasi_circumplex2F <-
+  quasi_circumplex2F_fit$results$parameters$unstandardized %>%
+  as_tibble() %>%
+  filter(paramHeader == "New.Additional.Parameters") %>%
+  add_row(param = "TSD", est = 0) %>%
+  mutate(theta = est %% (2 * pi),
+         theta_grad = theta * 180 / pi)
+```
+
+### Model Result
+```{r}
+#| label: print fit quasi circumplex 2F
+fit_quasi_circumplex2F %>% 
+  kable(.)
+```
+
+As the angular positions are the following
+```{r} 
+#| label: depict quasi circumplex 2F, 
+#| echo: false
+#| fig-width: 5.8
+thetas_quasi_circumplex2F %>% 
+  arrange(theta_grad) |> 
+  ggplot(aes(x = 1, 
+                y = theta_grad, 
+                group = param)) +
+  geom_label_repel(aes(label = param)) + 
+  geom_point(aes(color = param)) + 
+  scale_x_continuous(breaks = c(), limits = c(0, 1)) +
+  scale_y_continuous(breaks = c(), limits = c(0, 360)) +
+  coord_polar(theta = "y", 
+              direction = -1, 
+              clip = "off",
+              start = 1/8*pi) + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position = "none") +
+  theme_minimal() + 
+  xlab("") + 
+  ylab("")
+```
+
+# Integrating Democracy Education into the value quasi circumplex with 1F
+```{r}
+#| label: mplus code SPMCE democracy education quasi circumplex 1F
+#| 
+model_spmce_de_quasi_circumplex1F <- 
+           'lmsd by msd*0.49515;
+            lmst by mst*0.80853;
+            lmhe by mhe*0.63985;
+            lmac by mac*0.61272;
+            lmpo by mpo*0.75586;
+            lmse by mse*0.79618;
+            lmtr by mtr*0.60242;
+            lmco by mco*0.79836;
+            lmbe by mbe*0.46238;
+            lmun by mun*0.37573;
+
+            rmsd by lmsd*1.328 (u01);
+            rmst by lmst*0.855 (u02);
+            rmhe by lmhe*1.303 (u03);
+            rmac by lmac*1.381 (u04);
+            rmpo by lmpo*0.613 (u05);
+            rmse by lmse*0.941 (u06);
+            rmtr by lmtr*1.320 (u07);
+            rmco by lmco*1.007 (u08);
+            rmbe by lmbe*0.915 (u09);
+            rmun by lmun*1.312 (u10);
+
+            lmsd-lmun@0;
+            rmsd-rmun@1;
+            rmsd-rmun with rmsd-rmun@0;
+
+            msd-mun@0;
+
+
+            lev by lmsd-lmun*0.59 (b0);
+
+            cos1 by lmsd* 0.760 (b1);
+            cos1 by lmst* 0.626 (c1_02);
+            cos1 by lmhe* 0.441 (c1_03);
+            cos1 by lmac*-0.367 (c1_04);
+            cos1 by lmpo*-0.414 (c1_05);
+            cos1 by lmse*-0.750 (c1_06);
+            cos1 by lmtr*-0.672 (c1_07);
+            cos1 by lmco*-0.758 (c1_08);
+            cos1 by lmbe* 0.046 (c1_09);
+            cos1 by lmun* 0.469 (c1_10);
+
+            sin1 by lmsd@ 0.000;
+            sin1 by lmst* 0.432 (s1_02);
+            sin1 by lmhe* 0.620 (s1_03);
+            sin1 by lmac* 0.666 (s1_04);
+            sin1 by lmpo* 0.638 (s1_05);
+            sin1 by lmse*-0.123 (s1_06);
+            sin1 by lmtr*-0.355 (s1_07);
+            sin1 by lmco*-0.068 (s1_08);
+            sin1 by lmbe*-0.759 (s1_09);
+            sin1 by lmun*-0.598 (s1_10);
+
+          
+
+            !extension
+
+            ly by f1_1*1;
+            f1_1@0;
+            ly@1;
+
+            lev  WITH ly* 0.12467 (r10);
+            cos1 WITH ly* 0.03016 (rc1);
+            sin1 WITH ly*-0.23793 (rs1);
+
+
+            ly with rmsd* 0.00126  (ru01);
+            ly with rmst* 0.00290  (ru02);
+            ly with rmhe*-0.00019  (ru03);
+            ly with rmac* 0.01425  (ru04);
+            ly with rmpo*-0.04127  (ru05);
+            ly with rmse* 0.01500  (ru06);
+            ly with rmtr* 0.01200  (ru07);
+            ly with rmco* 0.04851  (ru08);
+            ly with rmbe*-0.07711  (ru09);
+            ly with rmun* 0.08375  (ru10);'
+
+constraint_spmce_de_quasi_circumplex1F <- 
+           '0 = 1 - sqrt(b0**2 + b1**2);
+            
+            b0 > 0;
+            b1 > 0;
+            
+            new(tst*6.88777);
+            new(the*0.95234);
+            new(tac*2.07419);
+            new(tpo*2.14695);
+            new(tse*3.30457);
+            new(ttr*3.62782);
+            new(tco*3.23080);
+            new(tbe*4.77319);
+            new(tun*5.37745);
+            
+            c1_02 = b1*cos(tst);  s1_02 = b1*sin(tst);
+            c1_03 = b1*cos(the);  s1_03 = b1*sin(the);
+            c1_04 = b1*cos(tac);  s1_04 = b1*sin(tac);
+            c1_05 = b1*cos(tpo);  s1_05 = b1*sin(tpo);
+            c1_06 = b1*cos(tse);  s1_06 = b1*sin(tse);
+            c1_07 = b1*cos(ttr);  s1_07 = b1*sin(ttr);
+            c1_08 = b1*cos(tco);  s1_08 = b1*sin(tco);
+            c1_09 = b1*cos(tbe);  s1_09 = b1*sin(tbe);
+            c1_10 = b1*cos(tun);  s1_10 = b1*sin(tun);
+            
+            
+           
+            
+            ! Extension
+            
+            new(g0*0.217);
+            new(ga*0.313);
+            new(da*4.838);
+            
+            r10 = g0*b0;
+            rc1 = ga*b1*cos(1*da);
+            rs1 = ga*b1*sin(1*da);
+          
+            
+            
+            0 = 
+            (b0*ru01)/u01+(b0*ru02)/u02+(b0*ru03)/u03+(b0*ru04)/u04+(b0*ru05)/u05+
+            (b0*ru06)/u06+(b0*ru07)/u07+(b0*ru08)/u08+(b0*ru09)/u09+(b0*ru10)/u10;
+            
+            0 = 
+            ((b1**2*cos(1*(0  -da)))*ru01)/u01+
+            ((b1**2*cos(1*(tst-da)))*ru02)/u02+
+            ((b1**2*cos(1*(the-da)))*ru03)/u03+
+            ((b1**2*cos(1*(tac-da)))*ru04)/u04+
+            ((b1**2*cos(1*(tpo-da)))*ru05)/u05+
+            ((b1**2*cos(1*(tse-da)))*ru06)/u06+
+            ((b1**2*cos(1*(ttr-da)))*ru07)/u07+
+            ((b1**2*cos(1*(tco-da)))*ru08)/u08+
+            ((b1**2*cos(1*(tbe-da)))*ru09)/u09+
+            ((b1**2*cos(1*(tun-da)))*ru10)/u10;
+            
+            0 = 
+            ((b1**2*sin(1*(da-0  )))*ru01)/u01+
+            ((b1**2*sin(1*(da-tst)))*ru02)/u02+
+            ((b1**2*sin(1*(da-the)))*ru03)/u03+
+            ((b1**2*sin(1*(da-tac)))*ru04)/u04+
+            ((b1**2*sin(1*(da-tpo)))*ru05)/u05+
+            ((b1**2*sin(1*(da-tse)))*ru06)/u06+
+            ((b1**2*sin(1*(da-ttr)))*ru07)/u07+
+            ((b1**2*sin(1*(da-tco)))*ru08)/u08+
+            ((b1**2*sin(1*(da-tbe)))*ru09)/u09+
+            ((b1**2*sin(1*(da-tun)))*ru10)/u10;'
+```
+
+
+```{r}
+#| label: SPMCE DE circumplex 1F
+#| cache: false
+
+spmce_de_quasi_circumplex1F_mod <- 
+  mplusObject(
+  TITLE = 'SPMCE Democracy Ed Quasi-Circ. 1F',
+  MODEL = model_spmce_de_quasi_circumplex1F,
+  MODELCONSTRAINT = constraint_spmce_de_quasi_circumplex1F, 
+  ANALYSIS = "ITERATIONS = 5000;",
+  OUTPUT = 'samp tech1 sval;',
+  rdata = data %>% 
+    select(msd, mst, mhe, mac, mpo, mse, mtr, mco, mbe, mun, f1_1))
+
+# Run Model in Mplus
+spmce_de_quasi_circumplex1F_fit <- 
+  mplusModeler(spmce_de_quasi_circumplex1F_mod,
+             modelout = "MPlus_Files/spmce_de_quasi_circumplex1F.inp",
+             run = TRUE, quiet = FALSE, hashfilename = F)
+
+# Store fit indices and theta 
+fit_spmce_de_quasi_circumplex1F <-
+  tibble(
+    CFI = spmce_de_quasi_circumplex1F_fit$results$summaries$CFI,
+    SRMR = spmce_de_quasi_circumplex1F_fit$results$summaries$SRMR,
+    RMSEA_Estimate = spmce_de_quasi_circumplex1F_fit$results$summaries$RMSEA_Estimate,
+    ChiSqM_Value = spmce_de_quasi_circumplex1F_fit$results$summaries$ChiSqM_Value,
+    ChiSqM_DF = spmce_de_quasi_circumplex1F_fit$results$summaries$ChiSqM_DF
+  )
+
+thetas_spmce_de_quasi_circumplex1F <-
+  spmce_de_quasi_circumplex1F_fit$results$parameters$unstandardized %>%
+  as_tibble() %>%
+  filter(paramHeader == "New.Additional.Parameters") %>%
+  add_row(param = "TSD", est = 0) %>%
+  mutate(theta = est %% (2 * pi),
+         theta_grad = theta * 180 / pi)
+```
+
+### Model Result
+```{r}
+#| label: print fit spmce quasi circumplex 1F
+fit_spmce_de_quasi_circumplex1F %>% 
+  kable(.)
+```
+
+As the angular positions are the following
+```{r} 
+#| label: depict spmce quasi circumplex 1F (rotated)
+#| echo: false
+#| fig-width: 5.8
+thetas_spmce_de_quasi_circumplex1F %>% 
+  arrange(theta_grad) |> 
+  filter(!param %in% c("G0", "GA")) %>% 
+  mutate(x = ifelse(param == "DA", .3, 1)) %>% 
+  ggplot(aes(x = x, 
+             y = theta_grad, 
+             group = param)) +
+  geom_label_repel(aes(label = param)) + 
+  geom_point(aes(color = param)) + 
+  # geom_textpath(data = tibble(x = c(0,1),
+  #                             y = c(38.1, 38.1),
+  #                             text = "Stimulation"),
+  #               aes(x = x, y = y, label = text)) +
+  scale_x_continuous(breaks = c(), limits = c(0, 1)) +
+  scale_y_continuous(breaks = c(), limits = c(0, 360)) +
+  coord_polar(theta = "y", 
+              direction = -1, 
+              clip = "off",
+              start = 0) + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position = "none") +
+  theme_minimal() + 
+  xlab("") + 
+  ylab("")
+```
+
+# Integrating Democracy Education into the value circumplex
+```{r}
+#| label: mplus code SPMCE democracy education quasi circumplex 2F
+#| 
+model_spmce_de_quasi_circumplex2F <- 
+           'lmsd by msd*0.49515;
+            lmst by mst*0.80853;
+            lmhe by mhe*0.63985;
+            lmac by mac*0.61272;
+            lmpo by mpo*0.75586;
+            lmse by mse*0.79618;
+            lmtr by mtr*0.60242;
+            lmco by mco*0.79836;
+            lmbe by mbe*0.46238;
+            lmun by mun*0.37573;
+
+            rmsd by lmsd*1.328 (u01);
+            rmst by lmst*0.855 (u02);
+            rmhe by lmhe*1.303 (u03);
+            rmac by lmac*1.381 (u04);
+            rmpo by lmpo*0.613 (u05);
+            rmse by lmse*0.941 (u06);
+            rmtr by lmtr*1.320 (u07);
+            rmco by lmco*1.007 (u08);
+            rmbe by lmbe*0.915 (u09);
+            rmun by lmun*1.312 (u10);
+
+            lmsd-lmun@0;
+            rmsd-rmun@1;
+            rmsd-rmun with rmsd-rmun@0;
+
+            msd-mun@0;
+
+
+            lev by lmsd-lmun*0.59 (b0);
+
+            cos1 by lmsd* 0.760 (b1);
+            cos1 by lmst* 0.626 (c1_02);
+            cos1 by lmhe* 0.441 (c1_03);
+            cos1 by lmac*-0.367 (c1_04);
+            cos1 by lmpo*-0.414 (c1_05);
+            cos1 by lmse*-0.750 (c1_06);
+            cos1 by lmtr*-0.672 (c1_07);
+            cos1 by lmco*-0.758 (c1_08);
+            cos1 by lmbe* 0.046 (c1_09);
+            cos1 by lmun* 0.469 (c1_10);
+
+            sin1 by lmsd@ 0.000;
+            sin1 by lmst* 0.432 (s1_02);
+            sin1 by lmhe* 0.620 (s1_03);
+            sin1 by lmac* 0.666 (s1_04);
+            sin1 by lmpo* 0.638 (s1_05);
+            sin1 by lmse*-0.123 (s1_06);
+            sin1 by lmtr*-0.355 (s1_07);
+            sin1 by lmco*-0.068 (s1_08);
+            sin1 by lmbe*-0.759 (s1_09);
+            sin1 by lmun*-0.598 (s1_10);
+
+            cos2 by lmsd* 0.280 (b2);
+            cos2 by lmst* 0.100 (c2_02);
+            cos2 by lmhe*-0.093 (c2_03);
+            cos2 by lmac*-0.152 (c2_04);
+            cos2 by lmpo*-0.115 (c2_05);
+            cos2 by lmse* 0.269 (c2_06);
+            cos2 by lmtr* 0.160 (c2_07);
+            cos2 by lmco* 0.279 (c2_08);
+            cos2 by lmbe*-0.282 (c2_09);
+            cos2 by lmun*-0.068 (c2_10);
+
+            sin2 by lmsd@0.0;
+            sin2 by lmst* 0.266 (s2_02);
+            sin2 by lmhe* 0.268 (s2_03);
+            sin2 by lmac*-0.240 (s2_04);
+            sin2 by lmpo*-0.259 (s2_05);
+            sin2 by lmse* 0.091 (s2_06);
+            sin2 by lmtr* 0.235 (s2_07);
+            sin2 by lmco* 0.050 (s2_08);
+            sin2 by lmbe*-0.034 (s2_09);
+            sin2 by lmun*-0.276 (s2_10);
+
+            lev-sin2@1 ;
+
+            lev-sin2 with lev-sin2@0;
+            lev-sin2 with rmsd-rmun@0;
+
+            !extension
+
+            ly by f1_1*1;
+            f1_1@0;
+            ly@1;
+
+            lev  WITH ly* 0.12467 (r10);
+            cos1 WITH ly* 0.03016 (rc1);
+            sin1 WITH ly*-0.23793 (rs1);
+            cos2 WITH ly*-0.08606 (rc2);
+            sin2 WITH ly*-0.02217 (rs2);
+
+
+            ly with rmsd* 0.00126  (ru01);
+            ly with rmst* 0.00290  (ru02);
+            ly with rmhe*-0.00019  (ru03);
+            ly with rmac* 0.01425  (ru04);
+            ly with rmpo*-0.04127  (ru05);
+            ly with rmse* 0.01500  (ru06);
+            ly with rmtr* 0.01200  (ru07);
+            ly with rmco* 0.04851  (ru08);
+            ly with rmbe*-0.07711  (ru09);
+            ly with rmun* 0.08375  (ru10);'
+
+constraint_spmce_de_quasi_circumplex2F <- 
+           '0 = 1 - sqrt(b0**2 + b1**2 + b2**2);
+            
+            b0 > 0;
+            b1 > 0;
+            b2 > 0;
+            
+            new(tst*6.88777);
+            new(the*0.95234);
+            new(tac*2.07419);
+            new(tpo*2.14695);
+            new(tse*3.30457);
+            new(ttr*3.62782);
+            new(tco*3.23080);
+            new(tbe*4.77319);
+            new(tun*5.37745);
+            
+            c1_02 = b1*cos(tst);  s1_02 = b1*sin(tst);
+            c1_03 = b1*cos(the);  s1_03 = b1*sin(the);
+            c1_04 = b1*cos(tac);  s1_04 = b1*sin(tac);
+            c1_05 = b1*cos(tpo);  s1_05 = b1*sin(tpo);
+            c1_06 = b1*cos(tse);  s1_06 = b1*sin(tse);
+            c1_07 = b1*cos(ttr);  s1_07 = b1*sin(ttr);
+            c1_08 = b1*cos(tco);  s1_08 = b1*sin(tco);
+            c1_09 = b1*cos(tbe);  s1_09 = b1*sin(tbe);
+            c1_10 = b1*cos(tun);  s1_10 = b1*sin(tun);
+            
+            
+            c2_02 = b2*cos(2*tst);  s2_02 = b2*sin(2*tst);
+            c2_03 = b2*cos(2*the);  s2_03 = b2*sin(2*the);
+            c2_04 = b2*cos(2*tac);  s2_04 = b2*sin(2*tac);
+            c2_05 = b2*cos(2*tpo);  s2_05 = b2*sin(2*tpo);
+            c2_06 = b2*cos(2*tse);  s2_06 = b2*sin(2*tse);
+            c2_07 = b2*cos(2*ttr);  s2_07 = b2*sin(2*ttr);
+            c2_08 = b2*cos(2*tco);  s2_08 = b2*sin(2*tco);
+            c2_09 = b2*cos(2*tbe);  s2_09 = b2*sin(2*tbe);
+            c2_10 = b2*cos(2*tun);  s2_10 = b2*sin(2*tun);
+            
+            ! Extension
+            
+            new(g0*0.217);
+            new(ga*0.313);
+            new(da*4.838);
+            
+            r10 = g0*b0;
+            rc1 = ga*b1*cos(1*da);
+            rs1 = ga*b1*sin(1*da);
+            rc2 = ga*b2*cos(2*da);
+            rs2 = ga*b2*sin(2*da);
+            
+            
+            0 = 
+            (b0*ru01)/u01+(b0*ru02)/u02+(b0*ru03)/u03+(b0*ru04)/u04+(b0*ru05)/u05+
+            (b0*ru06)/u06+(b0*ru07)/u07+(b0*ru08)/u08+(b0*ru09)/u09+(b0*ru10)/u10;
+            
+            0 = 
+            ((b1**2*cos(1*(0  -da))+b2**2*cos(2*(0  -da)))*ru01)/u01+
+            ((b1**2*cos(1*(tst-da))+b2**2*cos(2*(tst-da)))*ru02)/u02+
+            ((b1**2*cos(1*(the-da))+b2**2*cos(2*(the-da)))*ru03)/u03+
+            ((b1**2*cos(1*(tac-da))+b2**2*cos(2*(tac-da)))*ru04)/u04+
+            ((b1**2*cos(1*(tpo-da))+b2**2*cos(2*(tpo-da)))*ru05)/u05+
+            ((b1**2*cos(1*(tse-da))+b2**2*cos(2*(tse-da)))*ru06)/u06+
+            ((b1**2*cos(1*(ttr-da))+b2**2*cos(2*(ttr-da)))*ru07)/u07+
+            ((b1**2*cos(1*(tco-da))+b2**2*cos(2*(tco-da)))*ru08)/u08+
+            ((b1**2*cos(1*(tbe-da))+b2**2*cos(2*(tbe-da)))*ru09)/u09+
+            ((b1**2*cos(1*(tun-da))+b2**2*cos(2*(tun-da)))*ru10)/u10;
+            
+            0 = 
+            ((b1**2*sin(1*(da-0  ))+2*b2**2*sin(2*(da-0  )))*ru01)/u01+
+            ((b1**2*sin(1*(da-tst))+2*b2**2*sin(2*(da-tst)))*ru02)/u02+
+            ((b1**2*sin(1*(da-the))+2*b2**2*sin(2*(da-the)))*ru03)/u03+
+            ((b1**2*sin(1*(da-tac))+2*b2**2*sin(2*(da-tac)))*ru04)/u04+
+            ((b1**2*sin(1*(da-tpo))+2*b2**2*sin(2*(da-tpo)))*ru05)/u05+
+            ((b1**2*sin(1*(da-tse))+2*b2**2*sin(2*(da-tse)))*ru06)/u06+
+            ((b1**2*sin(1*(da-ttr))+2*b2**2*sin(2*(da-ttr)))*ru07)/u07+
+            ((b1**2*sin(1*(da-tco))+2*b2**2*sin(2*(da-tco)))*ru08)/u08+
+            ((b1**2*sin(1*(da-tbe))+2*b2**2*sin(2*(da-tbe)))*ru09)/u09+
+            ((b1**2*sin(1*(da-tun))+2*b2**2*sin(2*(da-tun)))*ru10)/u10;'
+```
+
+
+```{r}
+#| label: SPMCE DE circumplex 2F
+#| cache: false
+
+spmce_de_quasi_circumplex2F_mod <- 
+  mplusObject(
+  TITLE = 'SPMCE Democracy Ed Quasi-Circ. 2F',
+  MODEL = model_spmce_de_quasi_circumplex2F,
+  MODELCONSTRAINT = constraint_spmce_de_quasi_circumplex2F, 
+  OUTPUT = 'samp tech1 sval;',
+  rdata = data %>% 
+    select(msd, mst, mhe, mac, mpo, mse, mtr, mco, mbe, mun, f1_1))
+
+# Run Model in Mplus
+spmce_de_quasi_circumplex2F_fit <- 
+  mplusModeler(spmce_de_quasi_circumplex2F_mod,
+             modelout = "MPlus_Files/spmce_de_quasi_circumplex2F.inp",
+             run = TRUE, quiet = FALSE, hashfilename = F)
+
+# Store fit indices and theta 
+fit_spmce_de_quasi_circumplex2F <-
+  tibble(
+    CFI = spmce_de_quasi_circumplex2F_fit$results$summaries$CFI,
+    SRMR = spmce_de_quasi_circumplex2F_fit$results$summaries$SRMR,
+    RMSEA_Estimate = spmce_de_quasi_circumplex2F_fit$results$summaries$RMSEA_Estimate,
+    ChiSqM_Value = spmce_de_quasi_circumplex2F_fit$results$summaries$ChiSqM_Value,
+    ChiSqM_DF = spmce_de_quasi_circumplex2F_fit$results$summaries$ChiSqM_DF
+  )
+
+thetas_spmce_de_quasi_circumplex2F <-
+  spmce_de_quasi_circumplex2F_fit$results$parameters$unstandardized %>%
+  as_tibble() %>%
+  filter(paramHeader == "New.Additional.Parameters") %>%
+  add_row(param = "TSD", est = 0) %>%
+  mutate(theta = est %% (2 * pi),
+         theta_grad = theta * 180 / pi)
+```
+
+### Model Result
+```{r}
+#| label: print fit spmce quasi circumplex 2F
+fit_spmce_de_quasi_circumplex2F %>% 
+  kable(.)
+```
+
+As the angular positions are the following
+```{r} 
+#| label: depict spmce quasi circumplex (rotated)
+#| echo: false
+#| fig-width: 5.8
+thetas_spmce_de_quasi_circumplex2F %>% 
+  arrange(theta_grad) |> 
+  filter(!param %in% c("G0", "GA")) %>% 
+  mutate(x = ifelse(param == "DA", .3, 1)) %>% 
+  ggplot(aes(x = x, 
+             y = theta_grad, 
+             group = param)) +
+  geom_label_repel(aes(label = param)) + 
+  geom_point(aes(color = param)) + 
+  # geom_textpath(data = tibble(x = c(0,1),
+  #                             y = c(38.1, 38.1),
+  #                             text = "Stimulation"),
+  #               aes(x = x, y = y, label = text)) +
+  scale_x_continuous(breaks = c(), limits = c(0, 1)) +
+  scale_y_continuous(breaks = c(), limits = c(0, 360)) +
+  coord_polar(theta = "y", 
+              direction = -1, 
+              clip = "off",
+              start = 0) + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position = "none") +
+  theme_minimal() + 
+  xlab("") + 
+  ylab("")
+```

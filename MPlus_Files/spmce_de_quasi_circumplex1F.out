@@ -1,0 +1,1757 @@
+Mplus VERSION 8.7 (Mac)
+MUTHEN & MUTHEN
+10/17/2024   4:39 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  SPMCE Democracy Ed Quasi-Circ. 1F
+  DATA:
+  FILE = "MPlus_Files/spmce_de_quasi_circumplex1F.dat";
+
+  VARIABLE:
+  NAMES = msd mst mhe mac mpo mse mtr mco mbe mun f1_1;
+   MISSING=.;
+
+  ANALYSIS:
+  ITERATIONS = 5000;
+  MODEL:
+  lmsd by msd*0.49515;
+              lmst by mst*0.80853;
+              lmhe by mhe*0.63985;
+              lmac by mac*0.61272;
+              lmpo by mpo*0.75586;
+              lmse by mse*0.79618;
+              lmtr by mtr*0.60242;
+              lmco by mco*0.79836;
+              lmbe by mbe*0.46238;
+              lmun by mun*0.37573;
+
+              rmsd by lmsd*1.328 (u01);
+              rmst by lmst*0.855 (u02);
+              rmhe by lmhe*1.303 (u03);
+              rmac by lmac*1.381 (u04);
+              rmpo by lmpo*0.613 (u05);
+              rmse by lmse*0.941 (u06);
+              rmtr by lmtr*1.320 (u07);
+              rmco by lmco*1.007 (u08);
+              rmbe by lmbe*0.915 (u09);
+              rmun by lmun*1.312 (u10);
+
+              lmsd-lmun@0;
+              rmsd-rmun@1;
+              rmsd-rmun with rmsd-rmun@0;
+
+              msd-mun@0;
+
+
+              lev by lmsd-lmun*0.59 (b0);
+
+              cos1 by lmsd* 0.760 (b1);
+              cos1 by lmst* 0.626 (c1_02);
+              cos1 by lmhe* 0.441 (c1_03);
+              cos1 by lmac*-0.367 (c1_04);
+              cos1 by lmpo*-0.414 (c1_05);
+              cos1 by lmse*-0.750 (c1_06);
+              cos1 by lmtr*-0.672 (c1_07);
+              cos1 by lmco*-0.758 (c1_08);
+              cos1 by lmbe* 0.046 (c1_09);
+              cos1 by lmun* 0.469 (c1_10);
+
+              sin1 by lmsd@ 0.000;
+              sin1 by lmst* 0.432 (s1_02);
+              sin1 by lmhe* 0.620 (s1_03);
+              sin1 by lmac* 0.666 (s1_04);
+              sin1 by lmpo* 0.638 (s1_05);
+              sin1 by lmse*-0.123 (s1_06);
+              sin1 by lmtr*-0.355 (s1_07);
+              sin1 by lmco*-0.068 (s1_08);
+              sin1 by lmbe*-0.759 (s1_09);
+              sin1 by lmun*-0.598 (s1_10);
+
+
+
+              !extension
+
+              ly by f1_1*1;
+              f1_1@0;
+              ly@1;
+
+              lev  WITH ly* 0.12467 (r10);
+              cos1 WITH ly* 0.03016 (rc1);
+              sin1 WITH ly*-0.23793 (rs1);
+
+
+              ly with rmsd* 0.00126  (ru01);
+              ly with rmst* 0.00290  (ru02);
+              ly with rmhe*-0.00019  (ru03);
+              ly with rmac* 0.01425  (ru04);
+              ly with rmpo*-0.04127  (ru05);
+              ly with rmse* 0.01500  (ru06);
+              ly with rmtr* 0.01200  (ru07);
+              ly with rmco* 0.04851  (ru08);
+              ly with rmbe*-0.07711  (ru09);
+              ly with rmun* 0.08375  (ru10);
+  MODEL CONSTRAINT:
+  0 = 1 - sqrt(b0**2 + b1**2);
+
+              b0 > 0;
+              b1 > 0;
+
+              new(tst*6.88777);
+              new(the*0.95234);
+              new(tac*2.07419);
+              new(tpo*2.14695);
+              new(tse*3.30457);
+              new(ttr*3.62782);
+              new(tco*3.23080);
+              new(tbe*4.77319);
+              new(tun*5.37745);
+
+              c1_02 = b1*cos(tst);  s1_02 = b1*sin(tst);
+              c1_03 = b1*cos(the);  s1_03 = b1*sin(the);
+              c1_04 = b1*cos(tac);  s1_04 = b1*sin(tac);
+              c1_05 = b1*cos(tpo);  s1_05 = b1*sin(tpo);
+              c1_06 = b1*cos(tse);  s1_06 = b1*sin(tse);
+              c1_07 = b1*cos(ttr);  s1_07 = b1*sin(ttr);
+              c1_08 = b1*cos(tco);  s1_08 = b1*sin(tco);
+              c1_09 = b1*cos(tbe);  s1_09 = b1*sin(tbe);
+              c1_10 = b1*cos(tun);  s1_10 = b1*sin(tun);
+
+
+
+
+              ! Extension
+
+              new(g0*0.217);
+              new(ga*0.313);
+              new(da*4.838);
+
+              r10 = g0*b0;
+              rc1 = ga*b1*cos(1*da);
+              rs1 = ga*b1*sin(1*da);
+
+
+
+              0 =
+              (b0*ru01)/u01+(b0*ru02)/u02+(b0*ru03)/u03+(b0*ru04)/u04+(b0*ru05)/u05+
+              (b0*ru06)/u06+(b0*ru07)/u07+(b0*ru08)/u08+(b0*ru09)/u09+(b0*ru10)/u10;
+
+              0 =
+              ((b1**2*cos(1*(0  -da)))*ru01)/u01+
+              ((b1**2*cos(1*(tst-da)))*ru02)/u02+
+              ((b1**2*cos(1*(the-da)))*ru03)/u03+
+              ((b1**2*cos(1*(tac-da)))*ru04)/u04+
+              ((b1**2*cos(1*(tpo-da)))*ru05)/u05+
+              ((b1**2*cos(1*(tse-da)))*ru06)/u06+
+              ((b1**2*cos(1*(ttr-da)))*ru07)/u07+
+              ((b1**2*cos(1*(tco-da)))*ru08)/u08+
+              ((b1**2*cos(1*(tbe-da)))*ru09)/u09+
+              ((b1**2*cos(1*(tun-da)))*ru10)/u10;
+
+              0 =
+              ((b1**2*sin(1*(da-0  )))*ru01)/u01+
+              ((b1**2*sin(1*(da-tst)))*ru02)/u02+
+              ((b1**2*sin(1*(da-the)))*ru03)/u03+
+              ((b1**2*sin(1*(da-tac)))*ru04)/u04+
+              ((b1**2*sin(1*(da-tpo)))*ru05)/u05+
+              ((b1**2*sin(1*(da-tse)))*ru06)/u06+
+              ((b1**2*sin(1*(da-ttr)))*ru07)/u07+
+              ((b1**2*sin(1*(da-tco)))*ru08)/u08+
+              ((b1**2*sin(1*(da-tbe)))*ru09)/u09+
+              ((b1**2*sin(1*(da-tun)))*ru10)/u10;
+  OUTPUT:
+  samp tech1 sval;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SPMCE Democracy Ed Quasi-Circ. 1F
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1111
+
+Number of dependent variables                                   11
+Number of independent variables                                  0
+Number of continuous latent variables                           24
+
+Observed dependent variables
+
+  Continuous
+   MSD         MST         MHE         MAC         MPO         MSE
+   MTR         MCO         MBE         MUN         F1_1
+
+Continuous latent variables
+   LMSD        LMST        LMHE        LMAC        LMPO        LMSE
+   LMTR        LMCO        LMBE        LMUN        RMSD        RMST
+   RMHE        RMAC        RMPO        RMSE        RMTR        RMCO
+   RMBE        RMUN        LEV         COS1        SIN1        LY
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  5000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  MPlus_Files/spmce_de_quasi_circumplex1F.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            34
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.995
+ MST            0.975         0.975
+ MHE            0.981         0.967         0.981
+ MAC            0.982         0.967         0.970         0.982
+ MPO            0.990         0.973         0.978         0.979         0.990
+ MSE            0.970         0.953         0.963         0.963         0.968
+ MTR            0.990         0.972         0.978         0.980         0.986
+ MCO            0.986         0.969         0.977         0.976         0.983
+ MBE            0.986         0.968         0.976         0.977         0.983
+ MUN            0.994         0.975         0.981         0.981         0.989
+ F1_1           0.989         0.970         0.978         0.977         0.985
+
+
+           Covariance Coverage
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            0.970
+ MTR            0.968         0.990
+ MCO            0.967         0.985         0.986
+ MBE            0.963         0.982         0.978         0.986
+ MUN            0.969         0.989         0.986         0.985         0.994
+ F1_1           0.966         0.986         0.982         0.981         0.988
+
+
+           Covariance Coverage
+              F1_1
+              ________
+ F1_1           0.995
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                4.668         3.665         3.931         3.557         3.128
+
+
+           Means
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                4.138         3.714         4.046         4.822         5.150
+
+
+           Means
+              F1_1
+              ________
+                5.230
+
+
+           Covariances
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.683
+ MST            0.380         1.197
+ MHE            0.383         0.750         1.309
+ MAC            0.220         0.482         0.524         1.364
+ MPO            0.109         0.277         0.259         0.548         0.876
+ MSE            0.127         0.256         0.325         0.547         0.364
+ MTR            0.122         0.229         0.144         0.392         0.290
+ MCO            0.019         0.150         0.116         0.460         0.382
+ MBE            0.200         0.238         0.257         0.217         0.093
+ MUN            0.177         0.104         0.132         0.027        -0.064
+ F1_1           0.121         0.040         0.069         0.071         0.029
+
+
+           Covariances
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            1.304
+ MTR            0.510         1.328
+ MCO            0.513         0.513         1.183
+ MBE            0.249         0.192         0.199         0.665
+ MUN            0.059        -0.013         0.049         0.213         0.489
+ F1_1           0.063         0.008         0.008         0.118         0.167
+
+
+           Covariances
+              F1_1
+              ________
+ F1_1           0.789
+
+
+           Correlations
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            1.000
+ MST            0.420         1.000
+ MHE            0.405         0.599         1.000
+ MAC            0.228         0.377         0.392         1.000
+ MPO            0.141         0.271         0.241         0.501         1.000
+ MSE            0.134         0.205         0.249         0.410         0.341
+ MTR            0.128         0.182         0.109         0.292         0.268
+ MCO            0.021         0.126         0.093         0.362         0.376
+ MBE            0.297         0.267         0.276         0.227         0.121
+ MUN            0.306         0.136         0.164         0.032        -0.098
+ F1_1           0.164         0.041         0.068         0.068         0.034
+
+
+           Correlations
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            1.000
+ MTR            0.388         1.000
+ MCO            0.413         0.409         1.000
+ MBE            0.267         0.205         0.224         1.000
+ MUN            0.074        -0.017         0.064         0.374         1.000
+ F1_1           0.062         0.008         0.008         0.162         0.269
+
+
+           Correlations
+              F1_1
+              ________
+ F1_1           1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -15485.039
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     MSD                   4.668      -0.785       1.000    0.09%       4.000      4.500      5.000
+            1105.000       0.683       1.124       6.000    8.33%       5.000      5.500
+     MST                   3.672      -0.333       1.000    2.77%       3.000      3.500      4.000
+            1083.000       1.192      -0.197       6.000    2.03%       4.000      4.500
+     MHE                   3.936      -0.410       1.000    2.29%       3.000      4.000      4.000
+            1090.000       1.308      -0.209       6.000    4.86%       4.500      5.000
+     MAC                   3.566      -0.271       1.000    4.31%       2.500      3.500      3.500
+            1091.000       1.347      -0.478       6.000    1.65%       4.000      4.500
+     MPO                   3.126       0.027       1.000    4.91%       2.500      3.000      3.000
+            1100.000       0.875       0.515       6.000    0.73%       3.500      4.000
+     MSE                   4.150      -0.519       1.000    1.86%       3.000      4.000      4.000
+            1078.000       1.296      -0.011       6.000    7.61%       4.500      5.000
+     MTR                   3.715      -0.408       1.000    3.91%       3.000      3.500      4.000
+            1100.000       1.327      -0.200       6.000    2.64%       4.000      4.500
+     MCO                   4.053      -0.610       1.000    1.92%       3.000      4.000      4.000
+            1096.000       1.178       0.143       6.000    3.65%       4.500      5.000
+     MBE                   4.825      -0.897       1.000    0.18%       4.000      5.000      5.000
+            1095.000       0.664       1.518       6.000   12.60%       5.000      5.500
+     MUN                   5.150      -1.376       1.000    0.27%       4.667      5.000      5.333
+            1104.000       0.489       4.086       6.000   16.67%       5.333      5.667
+     F1_1                  5.231      -1.544       1.000    1.00%       5.000      5.000      5.000
+            1105.000       0.789       4.027       6.000   45.43%       6.000      6.000
+
+
+     THE DEGREES OF FREEDOM FOR THIS MODEL ARE NEGATIVE.  THE MODEL IS NOT
+     IDENTIFIED.  NO CHI-SQUARE TEST IS AVAILABLE.  CHECK YOUR MODEL.
+
+     NO CONVERGENCE. SERIOUS PROBLEMS IN ITERATIONS.
+     CHECK YOUR DATA, STARTING VALUES AND MODEL.
+
+
+
+MODEL RESULTS
+
+                    Estimate
+
+ LMSD     BY
+    MSD                0.495
+
+ LMST     BY
+    MST                0.809
+
+ LMHE     BY
+    MHE                0.640
+
+ LMAC     BY
+    MAC                0.613
+
+ LMPO     BY
+    MPO                0.756
+
+ LMSE     BY
+    MSE                0.796
+
+ LMTR     BY
+    MTR                0.602
+
+ LMCO     BY
+    MCO                0.798
+
+ LMBE     BY
+    MBE                0.462
+
+ LMUN     BY
+    MUN                0.376
+
+ LY       BY
+    F1_1               1.000
+
+ RMSD     BY
+    LMSD               1.328
+
+ RMST     BY
+    LMST               0.855
+
+ RMHE     BY
+    LMHE               1.303
+
+ RMAC     BY
+    LMAC               1.381
+
+ RMPO     BY
+    LMPO               0.613
+
+ RMSE     BY
+    LMSE               0.941
+
+ RMTR     BY
+    LMTR               1.320
+
+ RMCO     BY
+    LMCO               1.007
+
+ RMBE     BY
+    LMBE               0.915
+
+ RMUN     BY
+    LMUN               1.312
+
+ LEV      BY
+    LMSD               1.000
+    LMST               1.000
+    LMHE               1.000
+    LMAC               1.000
+    LMPO               1.000
+    LMSE               1.000
+    LMTR               1.000
+    LMCO               1.000
+    LMBE               1.000
+    LMUN               1.000
+
+ COS1     BY
+    LMSD               0.000
+    LMST               0.000
+    LMHE               0.000
+    LMAC               0.000
+    LMPO               0.000
+    LMSE               0.000
+    LMTR               0.000
+    LMCO               0.000
+    LMBE               0.000
+    LMUN               0.000
+
+ SIN1     BY
+    LMSD               0.000
+    LMST               0.000
+    LMHE               0.000
+    LMAC               0.000
+    LMPO               0.000
+    LMSE               0.000
+    LMTR               0.000
+    LMCO               0.000
+    LMBE               0.000
+    LMUN               0.000
+
+ RMSD     WITH
+    RMST               0.000
+    RMHE               0.000
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.001
+
+ RMST     WITH
+    RMHE               0.000
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.003
+
+ RMHE     WITH
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.000
+
+ RMAC     WITH
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.014
+
+ RMPO     WITH
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                -0.041
+
+ RMSE     WITH
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.015
+
+ RMTR     WITH
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.012
+
+ RMCO     WITH
+    RMBE               0.000
+    RMUN               0.000
+    LY                 0.049
+
+ RMBE     WITH
+    RMUN               0.000
+    LY                -0.077
+
+ RMUN     WITH
+    LY                 0.084
+
+ LEV      WITH
+    LY                 0.217
+    RMSD               0.000
+    RMST               0.000
+    RMHE               0.000
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+
+ COS1     WITH
+    LY                 0.000
+    RMSD               0.000
+    RMST               0.000
+    RMHE               0.000
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LEV                0.000
+
+ SIN1     WITH
+    LY                 0.000
+    RMSD               0.000
+    RMST               0.000
+    RMHE               0.000
+    RMAC               0.000
+    RMPO               0.000
+    RMSE               0.000
+    RMTR               0.000
+    RMCO               0.000
+    RMBE               0.000
+    RMUN               0.000
+    LEV                0.000
+    COS1               0.000
+
+ Intercepts
+    MSD                4.668
+    MST                3.672
+    MHE                3.936
+    MAC                3.566
+    MPO                3.126
+    MSE                4.150
+    MTR                3.715
+    MCO                4.053
+    MBE                4.825
+    MUN                5.150
+    F1_1               5.231
+
+ Variances
+    RMSD               1.000
+    RMST               1.000
+    RMHE               1.000
+    RMAC               1.000
+    RMPO               1.000
+    RMSE               1.000
+    RMTR               1.000
+    RMCO               1.000
+    RMBE               1.000
+    RMUN               1.000
+    LEV                0.050
+    COS1               0.050
+    SIN1               0.050
+    LY                 1.000
+
+ Residual Variances
+    MSD                0.000
+    MST                0.000
+    MHE                0.000
+    MAC                0.000
+    MPO                0.000
+    MSE                0.000
+    MTR                0.000
+    MCO                0.000
+    MBE                0.000
+    MUN                0.000
+    F1_1               0.000
+    LMSD               0.000
+    LMST               0.000
+    LMHE               0.000
+    LMAC               0.000
+    LMPO               0.000
+    LMSE               0.000
+    LMTR               0.000
+    LMCO               0.000
+    LMBE               0.000
+    LMUN               0.000
+
+New/Additional Parameters
+    TST                6.875
+    THE                0.952
+    TAC                2.074
+    TPO                2.147
+    TSE                3.305
+    TTR                3.628
+    TCO                3.231
+    TBE                4.773
+    TUN                5.377
+    G0                 0.217
+    GA                 0.313
+    DA                 4.838
+
+
+MODEL COMMAND WITH FINAL ESTIMATES USED AS STARTING VALUES
+
+     lmsd BY msd*0.49515;
+     lmst BY mst*0.80853;
+     lmhe BY mhe*0.63985;
+     lmac BY mac*0.61272;
+     lmpo BY mpo*0.75586;
+     lmse BY mse*0.79618;
+     lmtr BY mtr*0.60242;
+     lmco BY mco*0.79836;
+     lmbe BY mbe*0.46238;
+     lmun BY mun*0.37573;
+     ly BY f1_1*1;
+
+     rmsd BY lmsd*1.32800 (u01);
+     rmst BY lmst*0.85500 (u02);
+     rmhe BY lmhe*1.30300 (u03);
+     rmac BY lmac*1.38100 (u04);
+     rmpo BY lmpo*0.61342 (u05);
+     rmse BY lmse*0.94100 (u06);
+     rmtr BY lmtr*1.32000 (u07);
+     rmco BY lmco*1.00700 (u08);
+     rmbe BY lmbe*0.91500 (u09);
+     rmun BY lmun*1.31200 (u10);
+     lev BY lmsd*1 (b0);
+     lev BY lmst*1 (b0);
+     lev BY lmhe*1 (b0);
+     lev BY lmac*1 (b0);
+     lev BY lmpo*1 (b0);
+     lev BY lmse*1 (b0);
+     lev BY lmtr*1 (b0);
+     lev BY lmco*1 (b0);
+     lev BY lmbe*1 (b0);
+     lev BY lmun*1 (b0);
+     cos1 BY lmsd*0.00008 (b1);
+     cos1 BY lmst*0.00004 (c1_02);
+     cos1 BY lmhe*0.00003 (c1_03);
+     cos1 BY lmac*-0.00002 (c1_04);
+     cos1 BY lmpo*-0.00003 (c1_05);
+     cos1 BY lmse*-0.00005 (c1_06);
+     cos1 BY lmtr*-0.00004 (c1_07);
+     cos1 BY lmco*-0.00005 (c1_08);
+     cos1 BY lmbe*0.00000 (c1_09);
+     cos1 BY lmun*0.00003 (c1_10);
+     sin1 BY lmsd@0;
+     sin1 BY lmst*0.00003 (s1_02);
+     sin1 BY lmhe*0.00004 (s1_03);
+     sin1 BY lmac*0.00004 (s1_04);
+     sin1 BY lmpo*0.00004 (s1_05);
+     sin1 BY lmse*-0.00001 (s1_06);
+     sin1 BY lmtr*-0.00002 (s1_07);
+     sin1 BY lmco*0.00000 (s1_08);
+     sin1 BY lmbe*-0.00005 (s1_09);
+     sin1 BY lmun*-0.00004 (s1_10);
+
+     rmsd WITH rmst@0;
+     rmsd WITH rmhe@0;
+     rmsd WITH rmac@0;
+     rmsd WITH rmpo@0;
+     rmsd WITH rmse@0;
+     rmsd WITH rmtr@0;
+     rmsd WITH rmco@0;
+     rmsd WITH rmbe@0;
+     rmsd WITH rmun@0;
+     rmsd WITH ly*0.00126 (ru01);
+     rmst WITH rmhe@0;
+     rmst WITH rmac@0;
+     rmst WITH rmpo@0;
+     rmst WITH rmse@0;
+     rmst WITH rmtr@0;
+     rmst WITH rmco@0;
+     rmst WITH rmbe@0;
+     rmst WITH rmun@0;
+     rmst WITH ly*0.00290 (ru02);
+     rmhe WITH rmac@0;
+     rmhe WITH rmpo@0;
+     rmhe WITH rmse@0;
+     rmhe WITH rmtr@0;
+     rmhe WITH rmco@0;
+     rmhe WITH rmbe@0;
+     rmhe WITH rmun@0;
+     rmhe WITH ly*-0.00019 (ru03);
+     rmac WITH rmpo@0;
+     rmac WITH rmse@0;
+     rmac WITH rmtr@0;
+     rmac WITH rmco@0;
+     rmac WITH rmbe@0;
+     rmac WITH rmun@0;
+     rmac WITH ly*0.01425 (ru04);
+     rmpo WITH rmse@0;
+     rmpo WITH rmtr@0;
+     rmpo WITH rmco@0;
+     rmpo WITH rmbe@0;
+     rmpo WITH rmun@0;
+     rmpo WITH ly*-0.04127 (ru05);
+     rmse WITH rmtr@0;
+     rmse WITH rmco@0;
+     rmse WITH rmbe@0;
+     rmse WITH rmun@0;
+     rmse WITH ly*0.01500 (ru06);
+     rmtr WITH rmco@0;
+     rmtr WITH rmbe@0;
+     rmtr WITH rmun@0;
+     rmtr WITH ly*0.01200 (ru07);
+     rmco WITH rmbe@0;
+     rmco WITH rmun@0;
+     rmco WITH ly*0.04851 (ru08);
+     rmbe WITH rmun@0;
+     rmbe WITH ly*-0.07711 (ru09);
+     rmun WITH ly*0.08375 (ru10);
+     lev WITH ly*0.21700 (r10);
+     lev WITH rmsd*0.00000;
+     lev WITH rmst*0.00000;
+     lev WITH rmhe*0.00000;
+     lev WITH rmac*0.00000;
+     lev WITH rmpo*0.00000;
+     lev WITH rmse*0.00000;
+     lev WITH rmtr*0.00000;
+     lev WITH rmco*0.00000;
+     lev WITH rmbe*0.00000;
+     lev WITH rmun*0.00000;
+     cos1 WITH ly*0.00000 (rc1);
+     cos1 WITH rmsd*0.00000;
+     cos1 WITH rmst*0.00000;
+     cos1 WITH rmhe*0.00000;
+     cos1 WITH rmac*0.00000;
+     cos1 WITH rmpo*0.00000;
+     cos1 WITH rmse*0.00000;
+     cos1 WITH rmtr*0.00000;
+     cos1 WITH rmco*0.00000;
+     cos1 WITH rmbe*0.00000;
+     cos1 WITH rmun*0.00000;
+     cos1 WITH lev*0.00000;
+     sin1 WITH ly*-0.00001 (rs1);
+     sin1 WITH rmsd*0.00000;
+     sin1 WITH rmst*0.00000;
+     sin1 WITH rmhe*0.00000;
+     sin1 WITH rmac*0.00000;
+     sin1 WITH rmpo*0.00000;
+     sin1 WITH rmse*0.00000;
+     sin1 WITH rmtr*0.00000;
+     sin1 WITH rmco*0.00000;
+     sin1 WITH rmbe*0.00000;
+     sin1 WITH rmun*0.00000;
+     sin1 WITH lev*0.00000;
+     sin1 WITH cos1*0.00000;
+
+     [ msd*4.66833 ];
+     [ mst*3.67175 ];
+     [ mhe*3.93578 ];
+     [ mac*3.56554 ];
+     [ mpo*3.12636 ];
+     [ mse*4.15028 ];
+     [ mtr*3.71545 ];
+     [ mco*4.05292 ];
+     [ mbe*4.82466 ];
+     [ mun*5.15021 ];
+     [ f1_1*5.23077 ];
+
+     msd@0;
+     mst@0;
+     mhe@0;
+     mac@0;
+     mpo@0;
+     mse@0;
+     mtr@0;
+     mco@0;
+     mbe@0;
+     mun@0;
+     f1_1@0;
+     lmsd@0;
+     lmst@0;
+     lmhe@0;
+     lmac@0;
+     lmpo@0;
+     lmse@0;
+     lmtr@0;
+     lmco@0;
+     lmbe@0;
+     lmun@0;
+     rmsd@1;
+     rmst@1;
+     rmhe@1;
+     rmac@1;
+     rmpo@1;
+     rmse@1;
+     rmtr@1;
+     rmco@1;
+     rmbe@1;
+     rmun@1;
+     lev*0.05000;
+     cos1*0.05000;
+     sin1*0.05000;
+     ly@1;
+
+     ! NEW statements in MODEL CONSTRAINT
+     NEW(tst*6.87488);
+     NEW(the*0.95234);
+     NEW(tac*2.07419);
+     NEW(tpo*2.14695);
+     NEW(tse*3.30457);
+     NEW(ttr*3.62782);
+     NEW(tco*3.23080);
+     NEW(tbe*4.77319);
+     NEW(tun*5.37745);
+     NEW(g0*0.21700);
+     NEW(ga*0.31300);
+     NEW(da*4.83800);
+
+
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                  1             2             3             4             5
+
+
+           NU
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                  6             7             8             9            10
+
+
+           NU
+              F1_1
+              ________
+                 11
+
+
+           LAMBDA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ MSD               12             0             0             0             0
+ MST                0            13             0             0             0
+ MHE                0             0            14             0             0
+ MAC                0             0             0            15             0
+ MPO                0             0             0             0            16
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+ F1_1               0             0             0             0             0
+
+
+           LAMBDA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ MSD                0             0             0             0             0
+ MST                0             0             0             0             0
+ MHE                0             0             0             0             0
+ MAC                0             0             0             0             0
+ MPO                0             0             0             0             0
+ MSE               17             0             0             0             0
+ MTR                0            18             0             0             0
+ MCO                0             0            19             0             0
+ MBE                0             0             0            20             0
+ MUN                0             0             0             0            21
+ F1_1               0             0             0             0             0
+
+
+           LAMBDA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ MSD                0             0             0             0             0
+ MST                0             0             0             0             0
+ MHE                0             0             0             0             0
+ MAC                0             0             0             0             0
+ MPO                0             0             0             0             0
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+ F1_1               0             0             0             0             0
+
+
+           LAMBDA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ MSD                0             0             0             0             0
+ MST                0             0             0             0             0
+ MHE                0             0             0             0             0
+ MAC                0             0             0             0             0
+ MPO                0             0             0             0             0
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+ F1_1               0             0             0             0             0
+
+
+           LAMBDA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ MSD                0             0             0             0
+ MST                0             0             0             0
+ MHE                0             0             0             0
+ MAC                0             0             0             0
+ MPO                0             0             0             0
+ MSE                0             0             0             0
+ MTR                0             0             0             0
+ MCO                0             0             0             0
+ MBE                0             0             0             0
+ MUN                0             0             0             0
+ F1_1               0             0             0            22
+
+
+           THETA
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD                0
+ MST                0             0
+ MHE                0             0             0
+ MAC                0             0             0             0
+ MPO                0             0             0             0             0
+ MSE                0             0             0             0             0
+ MTR                0             0             0             0             0
+ MCO                0             0             0             0             0
+ MBE                0             0             0             0             0
+ MUN                0             0             0             0             0
+ F1_1               0             0             0             0             0
+
+
+           THETA
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE                0
+ MTR                0             0
+ MCO                0             0             0
+ MBE                0             0             0             0
+ MUN                0             0             0             0             0
+ F1_1               0             0             0             0             0
+
+
+           THETA
+              F1_1
+              ________
+ F1_1               0
+
+
+           ALPHA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+                  0             0             0             0
+
+
+           BETA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0             0             0             0             0
+ LMHE               0             0             0             0             0
+ LMAC               0             0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           BETA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0             0             0             0             0
+ LMHE               0             0             0             0             0
+ LMAC               0             0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           BETA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ LMSD              23             0             0             0             0
+ LMST               0            26             0             0             0
+ LMHE               0             0            29             0             0
+ LMAC               0             0             0            32             0
+ LMPO               0             0             0             0            35
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           BETA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ LMSD               0             0             0             0             0
+ LMST               0             0             0             0             0
+ LMHE               0             0             0             0             0
+ LMAC               0             0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE              38             0             0             0             0
+ LMTR               0            41             0             0             0
+ LMCO               0             0            44             0             0
+ LMBE               0             0             0            47             0
+ LMUN               0             0             0             0            50
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           BETA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ LMSD              24            25             0             0
+ LMST              24            27            28             0
+ LMHE              24            30            31             0
+ LMAC              24            33            34             0
+ LMPO              24            36            37             0
+ LMSE              24            39            40             0
+ LMTR              24            42            43             0
+ LMCO              24            45            46             0
+ LMBE              24            48            49             0
+ LMUN              24            51            52             0
+ RMSD               0             0             0             0
+ RMST               0             0             0             0
+ RMHE               0             0             0             0
+ RMAC               0             0             0             0
+ RMPO               0             0             0             0
+ RMSE               0             0             0             0
+ RMTR               0             0             0             0
+ RMCO               0             0             0             0
+ RMBE               0             0             0             0
+ RMUN               0             0             0             0
+ LEV                0             0             0             0
+ COS1               0             0             0             0
+ SIN1               0             0             0             0
+ LY                 0             0             0             0
+
+
+           PSI
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD               0
+ LMST               0             0
+ LMHE               0             0             0
+ LMAC               0             0             0             0
+ LMPO               0             0             0             0             0
+ LMSE               0             0             0             0             0
+ LMTR               0             0             0             0             0
+ LMCO               0             0             0             0             0
+ LMBE               0             0             0             0             0
+ LMUN               0             0             0             0             0
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           PSI
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSE               0
+ LMTR               0             0
+ LMCO               0             0             0
+ LMBE               0             0             0             0
+ LMUN               0             0             0             0             0
+ RMSD               0             0             0             0             0
+ RMST               0             0             0             0             0
+ RMHE               0             0             0             0             0
+ RMAC               0             0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV                0             0             0             0             0
+ COS1               0             0             0             0             0
+ SIN1               0             0             0             0             0
+ LY                 0             0             0             0             0
+
+
+           PSI
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ RMSD               0
+ RMST               0             0
+ RMHE               0             0             0
+ RMAC               0             0             0             0
+ RMPO               0             0             0             0             0
+ RMSE               0             0             0             0             0
+ RMTR               0             0             0             0             0
+ RMCO               0             0             0             0             0
+ RMBE               0             0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV               53            54            55            56            57
+ COS1              64            65            66            67            68
+ SIN1              76            77            78            79            80
+ LY                89            90            91            92            93
+
+
+           PSI
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ RMSE               0
+ RMTR               0             0
+ RMCO               0             0             0
+ RMBE               0             0             0             0
+ RMUN               0             0             0             0             0
+ LEV               58            59            60            61            62
+ COS1              69            70            71            72            73
+ SIN1              81            82            83            84            85
+ LY                94            95            96            97            98
+
+
+           PSI
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ LEV               63
+ COS1              74            75
+ SIN1              86            87            88
+ LY                99           100           101             0
+
+
+     PARAMETER SPECIFICATION FOR THE ADDITIONAL PARAMETERS
+
+
+           New/Additional Parameters
+              TST           THE           TAC           TPO           TSE
+              ________      ________      ________      ________      ________
+                  102           103           104           105           106
+
+
+           New/Additional Parameters
+              TTR           TCO           TBE           TUN           G0
+              ________      ________      ________      ________      ________
+                  107           108           109           110           111
+
+
+           New/Additional Parameters
+              GA            DA
+              ________      ________
+                  112           113
+
+
+     STARTING VALUES
+
+
+           NU
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+                4.668         3.672         3.936         3.566         3.126
+
+
+           NU
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+                4.150         3.715         4.053         4.825         5.150
+
+
+           NU
+              F1_1
+              ________
+                5.231
+
+
+           LAMBDA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ MSD            0.495         0.000         0.000         0.000         0.000
+ MST            0.000         0.809         0.000         0.000         0.000
+ MHE            0.000         0.000         0.640         0.000         0.000
+ MAC            0.000         0.000         0.000         0.613         0.000
+ MPO            0.000         0.000         0.000         0.000         0.756
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.796         0.000         0.000         0.000         0.000
+ MTR            0.000         0.602         0.000         0.000         0.000
+ MCO            0.000         0.000         0.798         0.000         0.000
+ MBE            0.000         0.000         0.000         0.462         0.000
+ MUN            0.000         0.000         0.000         0.000         0.376
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ MSD            0.000         0.000         0.000         0.000
+ MST            0.000         0.000         0.000         0.000
+ MHE            0.000         0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000
+ MSE            0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         1.000
+
+
+           THETA
+              MSD           MST           MHE           MAC           MPO
+              ________      ________      ________      ________      ________
+ MSD            0.000
+ MST            0.000         0.000
+ MHE            0.000         0.000         0.000
+ MAC            0.000         0.000         0.000         0.000
+ MPO            0.000         0.000         0.000         0.000         0.000
+ MSE            0.000         0.000         0.000         0.000         0.000
+ MTR            0.000         0.000         0.000         0.000         0.000
+ MCO            0.000         0.000         0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              MSE           MTR           MCO           MBE           MUN
+              ________      ________      ________      ________      ________
+ MSE            0.000
+ MTR            0.000         0.000
+ MCO            0.000         0.000         0.000
+ MBE            0.000         0.000         0.000         0.000
+ MUN            0.000         0.000         0.000         0.000         0.000
+ F1_1           0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              F1_1
+              ________
+ F1_1           0.000
+
+
+           ALPHA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+                0.000         0.000         0.000         0.000
+
+
+           BETA
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD           0.000         0.000         0.000         0.000         0.000
+ LMST           0.000         0.000         0.000         0.000         0.000
+ LMHE           0.000         0.000         0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSD           0.000         0.000         0.000         0.000         0.000
+ LMST           0.000         0.000         0.000         0.000         0.000
+ LMHE           0.000         0.000         0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ LMSD           1.328         0.000         0.000         0.000         0.000
+ LMST           0.000         0.855         0.000         0.000         0.000
+ LMHE           0.000         0.000         1.303         0.000         0.000
+ LMAC           0.000         0.000         0.000         1.381         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.613
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ LMSD           0.000         0.000         0.000         0.000         0.000
+ LMST           0.000         0.000         0.000         0.000         0.000
+ LMHE           0.000         0.000         0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.941         0.000         0.000         0.000         0.000
+ LMTR           0.000         1.320         0.000         0.000         0.000
+ LMCO           0.000         0.000         1.007         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.915         0.000
+ LMUN           0.000         0.000         0.000         0.000         1.312
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ LMSD           0.590         0.760         0.000         0.000
+ LMST           0.590         0.626         0.432         0.000
+ LMHE           0.590         0.441         0.620         0.000
+ LMAC           0.590        -0.367         0.666         0.000
+ LMPO           0.590        -0.414         0.638         0.000
+ LMSE           0.590        -0.750        -0.123         0.000
+ LMTR           0.590        -0.672        -0.355         0.000
+ LMCO           0.590        -0.758        -0.068         0.000
+ LMBE           0.590         0.046        -0.759         0.000
+ LMUN           0.590         0.469        -0.598         0.000
+ RMSD           0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000
+
+
+           PSI
+              LMSD          LMST          LMHE          LMAC          LMPO
+              ________      ________      ________      ________      ________
+ LMSD           0.000
+ LMST           0.000         0.000
+ LMHE           0.000         0.000         0.000
+ LMAC           0.000         0.000         0.000         0.000
+ LMPO           0.000         0.000         0.000         0.000         0.000
+ LMSE           0.000         0.000         0.000         0.000         0.000
+ LMTR           0.000         0.000         0.000         0.000         0.000
+ LMCO           0.000         0.000         0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              LMSE          LMTR          LMCO          LMBE          LMUN
+              ________      ________      ________      ________      ________
+ LMSE           0.000
+ LMTR           0.000         0.000
+ LMCO           0.000         0.000         0.000
+ LMBE           0.000         0.000         0.000         0.000
+ LMUN           0.000         0.000         0.000         0.000         0.000
+ RMSD           0.000         0.000         0.000         0.000         0.000
+ RMST           0.000         0.000         0.000         0.000         0.000
+ RMHE           0.000         0.000         0.000         0.000         0.000
+ RMAC           0.000         0.000         0.000         0.000         0.000
+ RMPO           0.000         0.000         0.000         0.000         0.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              RMSD          RMST          RMHE          RMAC          RMPO
+              ________      ________      ________      ________      ________
+ RMSD           1.000
+ RMST           0.000         1.000
+ RMHE           0.000         0.000         1.000
+ RMAC           0.000         0.000         0.000         1.000
+ RMPO           0.000         0.000         0.000         0.000         1.000
+ RMSE           0.000         0.000         0.000         0.000         0.000
+ RMTR           0.000         0.000         0.000         0.000         0.000
+ RMCO           0.000         0.000         0.000         0.000         0.000
+ RMBE           0.000         0.000         0.000         0.000         0.000
+ RMUN           0.000         0.000         0.000         0.000         0.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.001         0.003         0.000         0.014        -0.041
+
+
+           PSI
+              RMSE          RMTR          RMCO          RMBE          RMUN
+              ________      ________      ________      ________      ________
+ RMSE           1.000
+ RMTR           0.000         1.000
+ RMCO           0.000         0.000         1.000
+ RMBE           0.000         0.000         0.000         1.000
+ RMUN           0.000         0.000         0.000         0.000         1.000
+ LEV            0.000         0.000         0.000         0.000         0.000
+ COS1           0.000         0.000         0.000         0.000         0.000
+ SIN1           0.000         0.000         0.000         0.000         0.000
+ LY             0.015         0.012         0.049        -0.077         0.084
+
+
+           PSI
+              LEV           COS1          SIN1          LY
+              ________      ________      ________      ________
+ LEV            0.050
+ COS1           0.000         0.050
+ SIN1           0.000         0.000         0.050
+ LY             0.125         0.030        -0.238         1.000
+
+
+     STARTING VALUES FOR THE ADDITIONAL PARAMETERS
+
+
+           New/Additional Parameters
+              TST           THE           TAC           TPO           TSE
+              ________      ________      ________      ________      ________
+                6.888         0.952         2.074         2.147         3.305
+
+
+           New/Additional Parameters
+              TTR           TCO           TBE           TUN           G0
+              ________      ________      ________      ________      ________
+                3.628         3.231         4.773         5.377         0.217
+
+
+           New/Additional Parameters
+              GA            DA
+              ________      ________
+                0.313         4.838
+
+
+     Beginning Time:  16:39:07
+        Ending Time:  16:39:10
+       Elapsed Time:  00:00:03
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen
